@@ -1,0 +1,14 @@
+{
+  "name": "y",
+  "version": "1.0.0",
+  "description": "editor-editor",
+  "main": "local.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "editor"
+  ],
+  "author": "caizo",
+  "license": "AGPL-3.0-or-later"
+}
