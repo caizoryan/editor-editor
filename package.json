@@ -10,5 +10,9 @@
     "editor"
   ],
   "author": "caizo",
-  "license": "AGPL-3.0-or-later"
+  "license": "AGPL-3.0-or-later",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  }
 }
