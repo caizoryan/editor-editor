@@ -1,70 +1,93 @@
 import fs from "fs";
-import cors from "cors"
+import cors from "cors";
 import express from "express";
 import path from "path";
 import process from "process";
 
 const app = express();
 
-app.use(cors())
+app.use(cors());
 
-// /files/*
-// will check if file exists. If no extenstion, check if directory exists and return directory listing
-//
+// **********************************
+// ----------------------------------
+// WRITE FILE
+// ----------------------------------
+// **********************************
+app.post("/files/*", (req, res) => {
+	const options = { root: path.join(process.cwd()) };
 
-app.get('/files/*', (req, res) => {
-	console.log("cwd", process.cwd());
+	let file_path = req.path.replace("/files", "");
+	let body = req.body;
 
-	const options = {
-		root: path.join(process.cwd()),
-	};
+	if (!body) return res.status(400).send("No body provided");
 
+	// Will check if file exists and create it if not
+	// If file exists, will return error
 
-	let path_ = req.path.replace('/files', '')
-	let file = get_file(path_);
+	if (fs.existsSync("./files/" + file_path)) {
+		return res.status(400).send("File already exists");
+	}
+});
 
-	if (!file) return res.status(404).send('File not found')
+// **********************************
+// ----------------------------------
+// GET FILE
+// ----------------------------------
+// **********************************
 
-	if (file.type === 'file') res.sendFile(file.path, options)
-	else if (file.type === 'dir') res.json(file)
+app.get("/files/*", (req, res) => {
+	const options = { root: path.join(process.cwd()) };
 
-	else res.status(404).send('File not found')
-})
+	let file_path = req.path.replace("/files", "");
+	let file = get_file(file_path);
 
-let port = 8888
-app.listen(port, () => {
-	console.log(`Server running on port ${port}`);
-})
+	if (!file) return res.status(404).send("File not found");
+
+	if (file.type == "file") res.sendFile(file.path, options);
+	else if (file.type === "dir") res.json(file);
+});
 
 /**
- * @typedef {Object} File
+ * @typedef {Object} Dir
+ * @property {'dir'} type
+ * @property {string[]} files
  *
- * /
+ * @typedef {Object} File
+ * @property {'file'} type
+ * @property {string} path
+ *
+ * @typedef {(Dir | File)} FileResponse
+ */
 
 /**
  * @param {string} path
- * @returns {}
-*/
+ * @returns {FileResponse}
+ */
 function get_file(path) {
 	console.log("title", path);
-	console.log("path", './files/' + path);
+	console.log("path", "./files/" + path);
 
-	if (!fs.existsSync('./files/' + path)) return null
+	if (!fs.existsSync("./files/" + path)) return null;
 	if (!has_extension(path)) {
-		console.log("is dir");
-		let files = fs.readdirSync('./files/' + path);
-		return {
-			type: 'dir',
-			files
-		};
+		console.log("is a directory");
+		let files = fs.readdirSync("./files/" + path);
+		return { type: "dir", files };
 	}
 
-	return {
-		type: 'file',
-		path: '/files/' + path
-	}
+	return { type: "file", path: "/files/" + path };
 }
 
 function has_extension(str) {
-	return str.split('/').pop().includes('.');
+	return str.split("/").pop().includes(".");
 }
+
+// **********************************
+// ----------------------------------
+// INIT SERVER
+// ----------------------------------
+// **********************************
+
+let port = 8888;
+app.listen(port, () => {
+	console.log(`Server running on port ${port}`);
+});
