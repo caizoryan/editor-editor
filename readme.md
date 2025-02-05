@@ -2,7 +2,7 @@
 - [Frontend](#frontend) : Ability to edit text
 - [Backend](#backend) : Ability to save text
 
-# Editor writes code, Editor runs on Code, Editor writes Editor
+### Editor writes code, Editor runs on Code, Editor writes Editor
 The editor outputs an HTML file and runs from an HTML file. The editor also has a basic backend to save the files, directories, etc. 
 
 A single instance of this editor can be used to edit itself.
