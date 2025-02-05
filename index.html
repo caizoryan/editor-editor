@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Home</title>
+	<meta initial-scale=1.0, width=device-width charset="utf-8">
+</head>
+
+<body>
+</body>
+
+<script type="module">
+	import {log} from "/lib/logger.js";
+
+	let [renderers, set_renderers] = createStore({})
+
+	let m = () => document.querySelector("iframe")?.contentDocument.M
+
+	let moodle = {blocks: [{type: "group", output: "", blocks: []},]}
+	let [model, set_model] = createStore(moodle, {})
+
+	// TODO: import managment
+	let solid_imports = `import { mem, render, mut, sig, html, eff, eff_on, h} from "./solid_monke/solid_monke.js";`
+	let p5_import = ` import { p5 } from "./p5/p5.js" `
+
+	let compiled = mem(() => {
+		let code = model.blocks.map(block => block.output).join("\n")
+		return template.start + code + template.end
+	})
+
+</script>
+
+</html>

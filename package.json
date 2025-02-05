@@ -9,6 +9,7 @@
   "keywords": [
     "editor"
   ],
+  "type":"module",
   "author": "caizo",
   "license": "AGPL-3.0-or-later",
   "dependencies": {
