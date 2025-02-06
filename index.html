@@ -5,48 +5,11 @@
 	<title>Home</title>
 	<meta initial-scale=1.0, width=device-width charset="utf-8">
 </head>
-<style>
-	.editor
-</style>
+<style></style>
 
 <body>
 </body>
 
-<script type="module">
-	import {log} from "/lib/logger.js";
-	import {
-		store,
-		html,
-		render,
-		mem
-	} from "/lib/solid/monke.js";
-
-	let [renderers, set_renderers] = store({})
-
-	// let m = () => document.querySelector("iframe")?.contentDocument.M
-	//
-	// let moodle = {blocks: [{type: "group", output: "", blocks: []},]}
-	// let [model, set_model] = createStore(moodle, {})
-	//
-	// // TODO: import managment
-	// let solid_imports = `import { mem, render, mut, sig, html, eff, eff_on, h} from "./solid_monke/solid_monke.js";`
-	// let p5_import = ` import { p5 } from "./p5/p5.js" `
-	//
-	// let compiled = mem(() => {
-	// 	let code = model.blocks.map(block => block.output).join("\n")
-	// 	return template.start + code + template.end
-	// })
-	const iframe = mem(() => "<h1>hello in iframe</h1>")
-	const Root = () => {
-		return html`
-			.editor -- Editor
-			iframe.iframe [srcdoc=${iframe}] 
-		`
-	}
-
-
-	render(Root, document.body)
-
-</script>
+<script type="module" src="/lib/basic.js"></script>
 
 </html>
