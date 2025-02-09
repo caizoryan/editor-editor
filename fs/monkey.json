@@ -1,3 +1,17 @@
 {
-  "sex": "what"
+  "blocks": [
+    {
+      "type": "code"
+    },
+    {
+      "type": "basic"
+    },
+    {
+      "type": "basic"
+    },
+    {
+      "type": "basic"
+    }
+  ],
+  "output": ""
 }
