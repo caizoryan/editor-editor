@@ -1,3 +1,8 @@
+<script type="module"> import {mut} from "/lib/solid/monke.js";
+			const M = mut({});
+			const SOURCE_PATH = "base_editor.json"
+			document.M = M;
+			
 // -------------
 // Solid Imports
 // -------------
@@ -32,8 +37,8 @@ import {
 // -------------
 // UTILITIES
 // -------------
-let CURRENT_PATH = sig("");
-const save_path = "base_editor.json";
+let CURRENT_PATH = "";
+const save_path = "new_editor.json";
 const m = () => document.querySelector("iframe")?.contentDocument.M;
 const uid = () => Math.random().toString(36).substring(7);
 
@@ -132,7 +137,7 @@ class State {
 				res.blocks
 					? this.update("blocks", res.blocks)
 					: console.log("no blocks");
-				CURRENT_PATH.set(path);
+				CURRENT_PATH = path;
 			});
 	}
 
@@ -165,11 +170,6 @@ class State {
 		fetch("/exists/" + path).then((res) => res.json()).then((res) =>
 			res.exists ? this.overwrite(path) : this.create_new(path)
 		);
-	}
-
-	preview(path) {
-		this.output_file(path);
-		window.location = "/fs/" + path;
 	}
 
 	output_file(path) {
@@ -332,9 +332,8 @@ function RootRenderer(el, state) {
 	keys.on("shift+a", (_) => add_widget({ type: "basic" }));
 	keys.on("cmd+m", (_) => state.save(save_path));
 	keys.on("cmd+l", (_) => state.load(save_path));
-	keys.on("cmd+o", (_) => state.output_file("output.html"));
-	keys.on("cmd+e", (_) => state.preview("output.html"));
-	keys.on("cmd+b", (_) => console.log("source", CURRENT_PATH));
+	keys.on("cmd+o", (_) => console.log('ok'));
+	keys.on("cmd+b", (_) => state.load(SOURCE_PATH));
 	keys.on("ctrl+s", (_) => state.write());
 	keys.on("j", (_) => state.next());
 	keys.on("k", (_) => state.prev());
@@ -398,7 +397,7 @@ const f = "/";
 const iframe = mem(() =>
 	`<script type="module"> import {mut} from "/lib/solid/monke.js";
 			const M = mut({});
-			const SOURCE_PATH = "${CURRENT_PATH()}"
+			const SOURCE_PATH = ""
 			document.M = M;
 			${editor.state.blocks.map((e) => e.output).join("\n")}
 		<${f}script>
@@ -521,3 +520,6 @@ const cm_flatten_tree = (doc) => {
 };
 
 render(Root, document.body);
+document.body.style.background="pink"
+
+		</script>

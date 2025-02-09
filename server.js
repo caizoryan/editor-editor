@@ -43,12 +43,16 @@ function overwrite_path(req, res) {
 	const file_path = req.path.replace("/fs", "");
 	const full_path = path.join(process.cwd(), CONFIG.DIR, file_path);
 	const body = req.body;
+	const content = body.content;
+
 	console.log("overwriting", file_path);
 	console.log("body", body);
 
 	if (!body) return res.status(400).send("No body provided");
 
-	has_extension(file_path) ? write_file(full_path, body) : write_dir(full_path);
+	has_extension(file_path)
+		? write_file(full_path, content)
+		: write_dir(full_path);
 }
 
 // **********************************
@@ -62,7 +66,9 @@ function write_path(req, res) {
 	const file_path = req.path.replace("/fs", "");
 	const full_path = path.join(process.cwd(), CONFIG.DIR, file_path);
 	const body = req.body;
+	const content = body.content;
 
+	// TODO will not make dir... fix this
 	if (!body) return res.status(400).send("No body provided");
 
 	// Will check if file exists and create it if not
@@ -71,11 +77,14 @@ function write_path(req, res) {
 		return res.status(400).send("File already exists");
 	}
 
-	has_extension(file_path) ? write_file(full_path, body) : write_dir(full_path);
+	has_extension(file_path)
+		? write_file(full_path, content)
+		: write_dir(full_path);
 }
 
 function write_file(path, body) {
-	fs.writeFileSync(path, JSON.stringify(body, null, 2));
+	let b = `${body}`;
+	fs.writeFileSync(path, b, { encoding: "utf8" });
 }
 
 function write_dir(path) {
