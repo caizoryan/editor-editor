@@ -23,6 +23,15 @@ This project is just a simple idea to bootstrap an editor. The idea is to have s
 - Have editor and viewer share state (implemented as solid's reactive proxy: createMutable)
 - Create a very basic base (fs, simple editor, simple viewer) and implement everything else as modular libraries
 
+# Sketches
+
+### Offload functionality to in editor.
+Before starting, will define editor: used to edit code. output: page outputted by editor.
+So thinking right now, and if I pass in the editor instance in M to output. I can code saving and loading functionality in the editor and use it in the output. So I could have M.EDITOR.model, json stringify it and save to /fs/*path* through server api. Load same way using M.EDITOR.update("blocks")... etc. Can write another version of editor, output it and use that as default config.
+
+So slowly I can take my 700 lines and strip them down as much as I can to a next version and make this file as minimal as possible...
+See if it is possible to get the editor down to 256 lines for base. 
+
 # Details?
 I don't know what to call this section but just basic structure of the project
 
