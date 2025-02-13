@@ -4,6 +4,7 @@ import express from "express";
 import path from "path";
 import process from "process";
 import bodyParser from "body-parser";
+import { create_env } from "./ts/index.js";
 
 // **********************************
 // ----------------------------------
@@ -33,6 +34,84 @@ const CONFIG = {
 	LIB: "/lib/",
 };
 //
+//
+
+
+// **********************************
+// ----------------------------------
+// TSSERVER
+// ----------------------------------
+// **********************************
+let env
+create_env("console.log(null)").then((e) => {
+	env = e
+	console.log(e.languageService.getSemanticDiagnostics("index.js"))
+})
+
+function tsserver(message, req, res) {
+	console.log("message?", message)
+
+	if (message == "semantic_diagnostics") semantic_diagnositcs(res)
+	else if (message == "syntactic_diagnostics") syntactic_diagnositcs(res)
+	else if (message == "completion_at") res.json(completion_at(req.body.pos))
+}
+
+function semantic_diagnositcs(res) {
+	console.log("called semantics")
+	if (!env) return []
+	let d = env.languageService.getSemanticDiagnostics("index.js")
+	console.log(env.sys.readFile("index.js", "utf-8"))
+
+	if (Array.isArray(d)) {
+		d = d.map((m) => ({
+			start: m.start,
+			length: m.length,
+			messageText: m.messageText,
+			code: m.code,
+			category: m.category,
+		}))
+	}
+
+	console.log("semantics...", d)
+	return res.json({ content: d })
+}
+
+function syntactic_diagnositcs(res) {
+	console.log("called syntactic")
+	if (!env) return []
+	let d = env.languageService.getSyntacticDiagnostics("index.js")
+	if (Array.isArray(d)) {
+		d = d.map((m) => ({
+			start: m.start,
+			length: m.length,
+			messageText: m.messageText,
+			code: m.code,
+			category: m.category,
+		}))
+	}
+
+	console.log(env.sys.readFile("index.js", "utf-8"))
+	console.log("syntactic", d)
+	res.json({ content: d })
+}
+
+function completion_at(pos) {
+	console.log("called completion")
+	console.log("pos: ", pos)
+	if (env) return env.languageService.getCompletionsAtPosition('index.js', pos)
+	else return []
+}
+
+
+function tsserver_update(req, res) {
+	const body = req.body
+
+	const content = body.content;
+
+	if (env) env.updateFile("index.js", content)
+	console.log("updated")
+	res.status(200).send()
+}
 
 // **********************************
 // ----------------------------------
@@ -187,6 +266,12 @@ app.get("/", (req, res) => {
 app.get("/exists/*", get_exists);
 app.get("/fs/*", get_path);
 app.get("/lib/*", get_library);
+
+app.get("/tsserver/semantic_diagnostics", (res, req) => tsserver("semantic_diagnostics", res, req))
+app.get("/tsserver/syntactic_diagnostics", (res, req) => tsserver("syntactic_diagnostics", res, req))
+
+app.post("/tsserver/update", tsserver_update)
+app.post("/tsserver/completion_at", (res, req) => tsserver("completion_at", res, req))
 
 app.post("/fs/*", write_path);
 app.put("/fs/*", overwrite_path);
