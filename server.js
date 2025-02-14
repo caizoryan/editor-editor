@@ -89,7 +89,6 @@ function syntactic_diagnositcs(res) {
 		}))
 	}
 
-	console.log("foo", env.sys.readFile("lib/foo.js", "utf-8"))
 	console.log("syntactic", d)
 	res.json({ content: d })
 }
@@ -98,7 +97,7 @@ function completion_at(pos) {
 	console.log("called completion")
 	console.log("pos: ", pos)
 
-	console.log("foo", env.sys.readFile("lib/foo.js", "utf-8"))
+	console.log("foo", env.sys.readFile("/lib/foo.js", "utf-8"))
 	if (env) return env.languageService.getCompletionsAtPosition('index.js', pos)
 	else return []
 }
@@ -201,8 +200,8 @@ const get_path_base = (root) => (req, res) => {
 		: get_directory(file_path);
 
 	if (!file_res) return res.status(404).send("File not found");
-	if (file_res.type == "file") res.sendFile(file_res.path, options);
-	else if (file_res.type === "dir") res.json(file_res);
+	if (file_res.type == "file") res.status(200).sendFile(file_res.path, options);
+	else if (file_res.type === "dir") res.status(200).json(file_res);
 };
 
 const get_exists_base = (root) => (req, res) => {
@@ -220,8 +219,41 @@ const get_exists_base = (root) => (req, res) => {
 	res.json(result);
 };
 
+const get_path_transformed = (req, res) => {
+	console.log("path ->", req.path)
+	const options = { root: path.join(process.cwd()) };
+	const file_path = req.path.replace("/fs-run/", "");
+	console.log("file_path ->", file_path);
+	if (!has_extension(file_path)) res.status(404).send("Invalid File, dir not allowed")
+
+	let file = get_file(file_path, "/fs/")
+	if (file.type == "file") {
+		if (file.path.split(".").pop() == "json") {
+			let str = fs.readFileSync(path.join(options.root, file.path), { encoding: "utf8" })
+			let json = JSON.parse(str)
+			let out
+			if (json.blocks && json.blocks.length > 0) out = json.blocks[0].output
+			if (out) {
+				out = '<script type="module">' + out + '</script>'
+				console.log("sending", out)
+				res.set('Content-Type', 'text/html');
+				res.send(Buffer.from(out));
+			}
+
+		}
+	}
+
+	if (!file) return res.status(404).send("File not found");
+}
+
+
 const get_path = get_path_base(CONFIG.DIR);
-const get_dirs = get_path_base("");
+const get_dirs = (req, res) => {
+	console.log("GETTTING DIRS")
+	let dir_data = get_directory("")
+	console.log(dir_data)
+	res.json(dir_data)
+}
 const get_library = get_path_base(CONFIG.LIB);
 const get_exists = get_exists_base(CONFIG.DIR);
 //
@@ -231,8 +263,7 @@ const get_exists = get_exists_base(CONFIG.DIR);
  * @returns {File}
  * ---------------------------------- */
 function get_file(path, root) {
-	console.log("path", path);
-	console.log("root", root);
+	console.log("get file from -> root, path", root, path);
 	if (!fs.existsSync("." + root + path)) return null;
 	return { type: "file", path: "." + root + path };
 }
@@ -267,7 +298,8 @@ app.get("/", (req, res) => {
 });
 app.get("/exists/*", get_exists);
 app.get("/fs/*", get_path);
-app.get("/fs", get_dirs);
+app.get("/fs-run/*", get_path_transformed);
+app.get("/f", get_dirs);
 app.get("/lib/*", get_library);
 
 app.get("/tsserver/semantic_diagnostics", (res, req) => tsserver("semantic_diagnostics", res, req))
