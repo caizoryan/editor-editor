@@ -1,0 +1,23 @@
+{
+  "blocks": [
+    {
+      "type": "code",
+      "output": "import { mut,render, html, sig, mem, eff_on } from \"/lib/solid/monke.js\"\n\nlet M = mut({})\ndocument.M = M\n\n// Get the channel\nexport const auth = ''\nconst defer = (fn, t = 200) => setTimeout(fn, t)\n\ndefer(function() {\n  let E = M.EDITOR\n  // save this file\n  E.state.save(\"test/omama-feed.json\")\n})\n\n\nlet options = {\n\theaders: {\n\t\tAuthorization: \"Bearer \" + auth,\n\t}\n}\nlet channel\n\nasync function init() {\n channel = await fetch(\"https://api.are.na/v2/channels/acha-acha-twxwkjoba9s?per=100\", options)\n  .then( (response) => response.json() );\n  \n  console.log(\"title\", channel.title)\n  \n  let html_str=\"\"\n  let css  = `\n  <style>\n    body {\n      font-family: monospace;\n      display: grid;\n      grid-template-columns: repeat( auto-fit, minmax(300px, 1fr) );\n    }\n    \n    h2 {\n      font-size: 1.8em;\n      border-bottom: 1px solid #ddd;\n      padding-bottom: 5px;\n      color: #ddd;\n    }\n\n    .block {\n      overflow: hidden;\n      padding: 10px;\n      width: 300px;\n      border: 1px solid #eee;\n      margin: 10px;\n      display: flex;\n      flex-direction: column;\n      align-item: center;\n      justify-content: center;\n    }\n  `\n  \n  let title = (block) => \"<h2>\" + block.title + \"</h2>\"\n  let image = (block) => `<img src=\"${block.image?.display?.url}\"></img>`\n  let content = (block) => block.content_html\n  let animate = (i) => `\n    .block_${i+1} {\n      animation: animate_${i+1} ${(i+1)/10}s infinite;\n    }\n\n    @keyframes animate_${i+1} {\n      0% {opacity: 0;}\n      50% {opacity: 1;}\n      100% {opacity: 0;}\n    }\n  `\n  \n  channel.contents.forEach((block, i) => {\n    html_str += `<div class=\"block block_${i}\">`\n    \n    if (block.class == \"Attachment\" \n        || block.class == \"Link\" \n        || block.class == \"Image\"){\n      \n      html_str += title(block)\n      html_str += image(block)\n    }\n      \n    else if (block.class == \"Text\") {\n      html_str += title(block)\n      html_str += content(block)\n    }\n    \n    html_str += \"</div>\"\n  })\n\n  css+=\" </style> \"\n\n  return css+html_str\n}\n\ninit().then((res) => document.body.innerHTML = res)\n\n",
+      "start": 0,
+      "focused": false,
+      "cursor": 73,
+      "active": true,
+      "focus": true
+    },
+    {
+      "type": "code",
+      "id": "lh1luw",
+      "start": 2073,
+      "focused": false,
+      "output": "\n\n",
+      "cursor": 0,
+      "active": false
+    }
+  ],
+  "output": ""
+}
