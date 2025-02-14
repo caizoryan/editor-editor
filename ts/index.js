@@ -4,7 +4,6 @@ import fs from "fs"
 import {
 	createSystem,
 	createVirtualTypeScriptEnvironment,
-
 } from "@typescript/vfs"
 
 import ts from "typescript"
@@ -88,7 +87,6 @@ export async function create_env(content) {
 	addUserLibraries(fsMap)
 	fsMap.set("index.js", content)
 
-	fsMap.set("/lib/foo.js", test_import)
 
 	const compilerOpts = { target: ts.ScriptTarget.ES2015, esModuleInterop: true, allowJs: true, checkJs: true }
 	const env = createVirtualTypeScriptEnvironment(system, ["index.js"], ts, compilerOpts)
