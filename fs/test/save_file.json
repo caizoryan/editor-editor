@@ -1,0 +1,35 @@
+{
+  "blocks": [
+    {
+      "type": "code",
+      "id": "inothr",
+      "start": 0,
+      "focused": false,
+      "output": "setTimeout(() => console.log(M.EDITOR), 200)\n\n\n",
+      "cursor": 0,
+      "active": false,
+      "focus": false
+    },
+    {
+      "type": "code",
+      "id": "r7yuom",
+      "start": 47,
+      "focused": false,
+      "output": "\nsetTimeout(function (){\n  let editor = M.EDITOR\n  let state = editor.state\n\n  document.body.appendChild(create_button(\"prev\", () => state.prev() ))\n  document.body.appendChild(create_button(\"next\", () => state.next() ))\n  document.body.appendChild(create_button(\"save\", () => state.save(\"test/save_file.json\") ))\n\n\n}, 200)\n\n",
+      "cursor": 302,
+      "active": true,
+      "focus": true
+    },
+    {
+      "type": "code",
+      "id": "39gmqv",
+      "start": 372,
+      "focused": false,
+      "output": "function create_button(text, fn) {\n  let btn = document.createElement(\"button\")\n  btn.innerText = text\n  btn.onclick = fn\n\n  return btn\n}\n",
+      "cursor": 91,
+      "active": false,
+      "focus": false
+    }
+  ],
+  "output": ""
+}

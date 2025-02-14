@@ -4,6 +4,7 @@ import fs from "fs"
 import {
 	createSystem,
 	createVirtualTypeScriptEnvironment,
+
 } from "@typescript/vfs"
 
 import ts from "typescript"
@@ -18,18 +19,49 @@ const read_file = async (file_path) => {
 	return read
 }
 
-const getLib = async (name) => {
-	const lib = "/ts/typescript/"
-	let r = await read_file(lib + name)
-	len += r.length
-	return r
-}
-//
-const addLib = async (name, map) => {
-	map.set("/" + name, await getLib(name))
+
+const addUserLibraries = async (map) => {
+	const getLib = async (name) => {
+		const lib = "/lib/"
+		let r = await read_file(lib + name)
+		len += r.length
+		return r
+	}
+	//
+	const addLib = async (name, map) => {
+		console.log("adding library: ", name)
+		let val = await getLib(name)
+		console.log("map_set:", "/lib/" + name)
+		map.set("/lib/" + name, val)
+	}
+
+	// read /lib/ dir
+	// for each file add it
+	//
+	let root = process.cwd()
+	let full_path = path.join(root, "/lib/")
+	const files = await fs.promises.readdir(full_path, { recursive: true });
+	files.forEach((file) => {
+		if (file.includes("node_modules")) return
+		if (file.split(".").pop() == "js") {
+			addLib(file, map)
+		}
+	})
 }
 
 const createDefaultMap2015 = async () => {
+
+	const getLib = async (name) => {
+		const lib = "/ts/typescript/"
+		let r = await read_file(lib + name)
+		len += r.length
+		return r
+	}
+	//
+	const addLib = async (name, map) => {
+		map.set("/" + name, await getLib(name))
+	}
+
 	const fsMap = new Map()
 	await addLib("lib.es2015.d.ts", fsMap)
 	await addLib("lib.es2015.collection.d.ts", fsMap)
@@ -48,11 +80,15 @@ const createDefaultMap2015 = async () => {
 	return fsMap
 }
 
+
+
 export async function create_env(content) {
 	let fsMap = await createDefaultMap2015()
 	const system = createSystem(fsMap)
-
+	addUserLibraries(fsMap)
 	fsMap.set("index.js", content)
+
+	fsMap.set("/lib/foo.js", test_import)
 
 	const compilerOpts = { target: ts.ScriptTarget.ES2015, esModuleInterop: true, allowJs: true, checkJs: true }
 	const env = createVirtualTypeScriptEnvironment(system, ["index.js"], ts, compilerOpts)

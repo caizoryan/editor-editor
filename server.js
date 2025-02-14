@@ -60,7 +60,6 @@ function semantic_diagnositcs(res) {
 	console.log("called semantics")
 	if (!env) return []
 	let d = env.languageService.getSemanticDiagnostics("index.js")
-	console.log(env.sys.readFile("index.js", "utf-8"))
 
 	if (Array.isArray(d)) {
 		d = d.map((m) => ({
@@ -90,7 +89,7 @@ function syntactic_diagnositcs(res) {
 		}))
 	}
 
-	console.log(env.sys.readFile("index.js", "utf-8"))
+	console.log("foo", env.sys.readFile("lib/foo.js", "utf-8"))
 	console.log("syntactic", d)
 	res.json({ content: d })
 }
@@ -98,6 +97,8 @@ function syntactic_diagnositcs(res) {
 function completion_at(pos) {
 	console.log("called completion")
 	console.log("pos: ", pos)
+
+	console.log("foo", env.sys.readFile("lib/foo.js", "utf-8"))
 	if (env) return env.languageService.getCompletionsAtPosition('index.js', pos)
 	else return []
 }
@@ -220,6 +221,7 @@ const get_exists_base = (root) => (req, res) => {
 };
 
 const get_path = get_path_base(CONFIG.DIR);
+const get_dirs = get_path_base("");
 const get_library = get_path_base(CONFIG.LIB);
 const get_exists = get_exists_base(CONFIG.DIR);
 //
@@ -265,6 +267,7 @@ app.get("/", (req, res) => {
 });
 app.get("/exists/*", get_exists);
 app.get("/fs/*", get_path);
+app.get("/fs", get_dirs);
 app.get("/lib/*", get_library);
 
 app.get("/tsserver/semantic_diagnostics", (res, req) => tsserver("semantic_diagnostics", res, req))
