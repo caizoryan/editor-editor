@@ -227,7 +227,7 @@ const get_path_transformed = (req, res) => {
 	if (!has_extension(file_path)) res.status(404).send("Invalid File, dir not allowed")
 
 	let file = get_file(file_path, "/fs/")
-	if (file.type == "file") {
+	if (file?.type == "file") {
 		if (file.path.split(".").pop() == "json") {
 			let str = fs.readFileSync(path.join(options.root, file.path), { encoding: "utf8" })
 			let json = JSON.parse(str)
