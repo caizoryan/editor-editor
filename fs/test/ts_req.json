@@ -1,0 +1,34 @@
+{
+  "blocks": [
+    {
+      "type": "code",
+      "output": "import {mut} from \"/lib/solid/monke.js\"\n\nconst M = mut({});\ndocument.M = M;\nconst defer = (fn, t = 200) => setTimeout(fn, t)\n\nlet m_editor \nfunction poll_editor(fn, interval = 150, count = 0){\n  defer(function() {\n    let E = M.EDITOR\n    console.log('polled:',E)\n\tif (!E) poll_editor(fn, interval, count + 1)\n    else {\n      m_editor = E;\n      console.log('editor after, ', count,': ', m_editor);\n      fn()\n   }\n  }, interval)\n}\nconst save = (path) =>  m_editor.state.save(path) \npoll_editor(() => save(\"test/ts_req.json\"), 500)\n\n",
+      "active": false,
+      "focus": false,
+      "start": 0,
+      "focused": false,
+      "cursor": 533
+    },
+    {
+      "type": "code",
+      "id": "k7bkc",
+      "start": 534,
+      "focused": false,
+      "output": "async function post(url = \"\", body) {\n  try {\n    let f = await fetch(url, {\n      method: \"POST\",\n      headers: {\"Content-Type\": \"application/json\"},\n      body: JSON.stringify(body)\n    }).then((res) => res.json())\n    return f\n  }catch {\n    return null\n  }\n}\n\npost(\"/ts/getQuickInfoAtPosition\", {args: [559]}).then((res) => {\n  console.log(\"res\", res)\n})\n\n",
+      "cursor": 0,
+      "active": false,
+      "focus": false
+    },
+    {
+      "type": "code",
+      "id": "h9itpr",
+      "start": 895,
+      "focused": false,
+      "output": "\n",
+      "cursor": 0,
+      "active": true,
+      "focus": true
+    }
+  ],
+  "output": ""
+}

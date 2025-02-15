@@ -48,6 +48,19 @@ create_env("console.log(null)").then((e) => {
 	console.log(e.languageService.getSemanticDiagnostics("index.js"))
 })
 
+function get_tsserver(req, res) {
+	const fn = req.path.replace("/ts", "").replace("/", "");
+	if (!env) return []
+	if (env.languageService[fn]) res.json(env.languageService[fn]("index.js"))
+}
+
+function post_tsserver(req, res) {
+	const fn = req.path.replace("/ts", "").replace("/", "");
+
+	if (!env) return []
+	if (env.languageService[fn]) res.json(env.languageService[fn]("index.js", ...req.body.args))
+}
+
 function tsserver(message, req, res) {
 	console.log("message?", message)
 
@@ -304,6 +317,8 @@ app.get("/lib/*", get_library);
 
 app.get("/tsserver/semantic_diagnostics", (res, req) => tsserver("semantic_diagnostics", res, req))
 app.get("/tsserver/syntactic_diagnostics", (res, req) => tsserver("syntactic_diagnostics", res, req))
+app.get("/ts/*", get_tsserver)
+app.post("/ts/*", post_tsserver)
 
 app.post("/tsserver/update", tsserver_update)
 app.post("/tsserver/completion_at", (res, req) => tsserver("completion_at", res, req))

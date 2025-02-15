@@ -1,0 +1,21 @@
+{
+  "blocks": [
+    {
+      "type": "code",
+      "output": "import {mut} from \"/lib/solid/monke.js\"\n\nconst M = mut({});\ndocument.M = M;\nconst defer = (fn, t = 200) => setTimeout(fn, t)\n\ndefer(function() {\n  let E = M.EDITOR\n\tif (!E) return\n  // E.state.load(\"utils/fileviewer.json\")\n})\n\n",
+      "start": 0,
+      "focused": false,
+      "cursor": 0,
+      "active": false
+    },
+    {
+      "type": "save-component",
+      "id": "juvzc",
+      "start": 227,
+      "path": "",
+      "active": true,
+      "focus": true
+    }
+  ],
+  "output": ""
+}
