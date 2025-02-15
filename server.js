@@ -232,7 +232,7 @@ const get_path_transformed = (req, res) => {
 			let str = fs.readFileSync(path.join(options.root, file.path), { encoding: "utf8" })
 			let json = JSON.parse(str)
 			let out
-			if (json.blocks && json.blocks.length > 0) out = json.blocks[0].output
+			if (json.blocks && json.blocks.length > 0) out = json.blocks.map((e) => e.output).join("")
 			if (out) {
 				out = '<script type="module">' + out + '</script>'
 				console.log("sending", out)
