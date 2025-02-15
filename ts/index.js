@@ -8,6 +8,7 @@ import {
 
 import ts from "typescript"
 
+
 let len = 0
 
 const read_file = async (file_path) => {
@@ -93,3 +94,6 @@ export async function create_env(content) {
 	return env
 }
 
+export const extra = {
+	displayPartsToString: ts.displayPartsToString
+}

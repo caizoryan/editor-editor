@@ -4,7 +4,22 @@ import express from "express";
 import path from "path";
 import process from "process";
 import bodyParser from "body-parser";
-import { create_env } from "./ts/index.js";
+import { create_env, extra } from "./ts/index.js";
+
+
+// **********************************
+// ----------------------------------
+// TODO: return file and folder with read dir fn
+// ----------------------------------
+// **********************************
+// const fs = require('node:fs');
+//
+//
+// fs.readdirSync(folderPath)
+//   .map(fileName => {
+//     return path.join(folderPath, fileName);
+//   })
+//   .filter(isFile);
 
 // **********************************
 // ----------------------------------
@@ -15,6 +30,7 @@ import { create_env } from "./ts/index.js";
  * @typedef {Object} Dir
  * @property {'dir'} type
  * @property {string[]} files
+ * @property {string[]} dirs
  *
  * @typedef {Object} File
  * @property {'file'} type
@@ -45,7 +61,6 @@ const CONFIG = {
 let env
 create_env("console.log(null)").then((e) => {
 	env = e
-	console.log(e.languageService.getSemanticDiagnostics("index.js"))
 })
 
 function get_tsserver(req, res) {
@@ -59,18 +74,16 @@ function post_tsserver(req, res) {
 
 	if (!env) return []
 	if (env.languageService[fn]) res.json(env.languageService[fn]("index.js", ...req.body.args))
+	else if (extra[fn]) res.json(extra[fn](...req.body.args))
 }
 
 function tsserver(message, req, res) {
-	console.log("message?", message)
-
 	if (message == "semantic_diagnostics") semantic_diagnositcs(res)
 	else if (message == "syntactic_diagnostics") syntactic_diagnositcs(res)
 	else if (message == "completion_at") res.json(completion_at(req.body.pos))
 }
 
 function semantic_diagnositcs(res) {
-	console.log("called semantics")
 	if (!env) return []
 	let d = env.languageService.getSemanticDiagnostics("index.js")
 
@@ -84,12 +97,10 @@ function semantic_diagnositcs(res) {
 		}))
 	}
 
-	console.log("semantics...", d)
 	return res.json({ content: d })
 }
 
 function syntactic_diagnositcs(res) {
-	console.log("called syntactic")
 	if (!env) return []
 	let d = env.languageService.getSyntacticDiagnostics("index.js")
 	if (Array.isArray(d)) {
@@ -102,15 +113,12 @@ function syntactic_diagnositcs(res) {
 		}))
 	}
 
-	console.log("syntactic", d)
 	res.json({ content: d })
 }
 
 function completion_at(pos) {
-	console.log("called completion")
 	console.log("pos: ", pos)
 
-	console.log("foo", env.sys.readFile("/lib/foo.js", "utf-8"))
 	if (env) return env.languageService.getCompletionsAtPosition('index.js', pos)
 	else return []
 }
@@ -122,7 +130,6 @@ function tsserver_update(req, res) {
 	const content = body.content;
 
 	if (env) env.updateFile("index.js", content)
-	console.log("updated")
 	res.status(200).send()
 }
 
@@ -138,7 +145,6 @@ function overwrite_path(req, res) {
 	const content = body.content;
 
 	console.log("overwriting", file_path);
-	console.log("body", body);
 
 	if (!body) return res.status(400).send("No body provided");
 
@@ -205,11 +211,11 @@ function write_dir(path) {
  */
 const get_path_base = (root) => (req, res) => {
 	const options = { root: path.join(process.cwd()) };
-	const file_path = req.path.replace(root, "");
+	const file_path = req.path
 	console.log("file_path", file_path);
 
 	const file_res = has_extension(file_path)
-		? get_file(file_path, root)
+		? get_file(file_path)
 		: get_directory(file_path);
 
 	if (!file_res) return res.status(404).send("File not found");
@@ -218,11 +224,11 @@ const get_path_base = (root) => (req, res) => {
 };
 
 const get_exists_base = (root) => (req, res) => {
-	const file_path = req.path.replace("/exists/", "");
+	const file_path = req.path.replace("/exists/", "/fs/");
 	console.log("exists called ->", file_path);
 
 	const file_res = has_extension(file_path)
-		? get_file(file_path, root)
+		? get_file(file_path)
 		: get_directory(file_path);
 
 	const result = {
@@ -235,11 +241,11 @@ const get_exists_base = (root) => (req, res) => {
 const get_path_transformed = (req, res) => {
 	console.log("path ->", req.path)
 	const options = { root: path.join(process.cwd()) };
-	const file_path = req.path.replace("/fs-run/", "");
+	const file_path = req.path.replace("/fs-run/", "/fs/");
 	console.log("file_path ->", file_path);
 	if (!has_extension(file_path)) res.status(404).send("Invalid File, dir not allowed")
 
-	let file = get_file(file_path, "/fs/")
+	let file = get_file(file_path)
 	if (file?.type == "file") {
 		if (file.path.split(".").pop() == "json") {
 			let str = fs.readFileSync(path.join(options.root, file.path), { encoding: "utf8" })
@@ -248,7 +254,7 @@ const get_path_transformed = (req, res) => {
 			if (json.blocks && json.blocks.length > 0) out = json.blocks.map((e) => e.output).join("")
 			if (out) {
 				out = '<script type="module">' + out + '</script>'
-				console.log("sending", out)
+				console.log("sending", file_path)
 				res.set('Content-Type', 'text/html');
 				res.send(Buffer.from(out));
 			}
@@ -263,6 +269,9 @@ const get_path_transformed = (req, res) => {
 const get_path = get_path_base(CONFIG.DIR);
 const get_dirs = (req, res) => {
 	console.log("GETTTING DIRS")
+	console.log("GETTTING DIRS")
+	console.log("GETTTING DIRS")
+	console.log("GETTTING DIRS")
 	let dir_data = get_directory("")
 	console.log(dir_data)
 	res.json(dir_data)
@@ -275,20 +284,38 @@ const get_exists = get_exists_base(CONFIG.DIR);
  * @param {string} path
  * @returns {File}
  * ---------------------------------- */
-function get_file(path, root) {
-	console.log("get file from -> root, path", root, path);
-	if (!fs.existsSync("." + root + path)) return null;
-	return { type: "file", path: "." + root + path };
+function get_file(path) {
+	console.log("get file from -> path", path);
+	if (!fs.existsSync("." + path)) return null;
+	return { type: "file", path: "." + path };
 }
+
+
+/** ---------------------------------
+ * @param {string} file_name
+ * @returns {boolean}
+ * ---------------------------------- */
+const is_file = (file_name) => {
+	return fs.lstatSync(file_name).isFile();
+};
 
 /** ---------------------------------
  * @param {string} path
  * @returns {Dir}
  * ---------------------------------- */
-function get_directory(path) {
-	if (!fs.existsSync("." + CONFIG.DIR + path)) return null;
-	const files = fs.readdirSync("." + CONFIG.DIR + path);
-	return { type: "dir", files };
+function get_directory(_path) {
+	console.log("tryin to get dir", _path)
+	const full_path_relative = path.join(".", _path)
+	const full_path = "." + CONFIG.DIR + _path
+
+	console.log("full path", full_path_relative)
+	if (!fs.existsSync(full_path_relative)) return null;
+	console.log("exists", full_path_relative)
+
+	const files = fs.readdirSync(full_path_relative).filter((p) => is_file(path.join(full_path_relative, p)))
+	const dirs = fs.readdirSync(full_path_relative).filter((p) => !is_file(path.join(full_path_relative, p)))
+	console.log("got dir", _path, dirs, files)
+	return { type: "dir", files, dirs };
 }
 
 function has_extension(str) {

@@ -2,19 +2,19 @@
   "blocks": [
     {
       "type": "code",
-      "output": "import {mut} from \"/lib/solid/monke.js\"\n\nconst M = mut({});\ndocument.M = M;\nconst defer = (fn, t = 200) => setTimeout(fn, t)\n\nlet m_editor \nfunction poll_editor(fn, interval = 150, count = 0){\n  defer(function() {\n    let E = M.EDITOR\n    console.log('polled:',E)\n\tif (!E) poll_editor(fn, interval, count + 1)\n    else {\n      m_editor = E;\n      console.log('editor after, ', count,': ', m_editor);\n      fn()\n   }\n  }, interval)\n}\nconst save = (path) =>  m_editor.state.save(path) \npoll_editor(() => save(\"test/ts_req.json\"), 500)\n\n",
+      "output": "import {mut} from \"/lib/solid/monke.js\"\n\nconst M = mut({});\ndocument.M = M;\nconst defer = (fn, t = 200) => setTimeout(fn, t)\n\nlet m_editor \nfunction poll_editor(fn, interval = 150, count = 0){\n  defer(function() {\n    let E = M.EDITOR\n    console.log('polled:',E)\n\tif (!E) poll_editor(fn, interval, count + 1)\n    else {\n      m_editor = E;\n      console.log('editor after, ', count,': ', m_editor);\n      fn()\n   }\n  }, interval)\n}\nconst save = (path) =>  m_editor.state.save(path) \npoll_editor(() => save(\"test/ts_req.json\"), 500)\n\n\n/**\n* This is a description of post method\n* @param {string} url \n* @param {Object} body \n* @return {Promise<Object | null>}\n*/\n\n",
       "active": false,
       "focus": false,
       "start": 0,
       "focused": false,
-      "cursor": 533
+      "cursor": 0
     },
     {
       "type": "code",
       "id": "k7bkc",
-      "start": 534,
+      "start": 664,
       "focused": false,
-      "output": "async function post(url = \"\", body) {\n  try {\n    let f = await fetch(url, {\n      method: \"POST\",\n      headers: {\"Content-Type\": \"application/json\"},\n      body: JSON.stringify(body)\n    }).then((res) => res.json())\n    return f\n  }catch {\n    return null\n  }\n}\n\npost(\"/ts/getQuickInfoAtPosition\", {args: [559]}).then((res) => {\n  console.log(\"res\", res)\n})\n\n",
+      "output": "async function post(url = \"\", body) {\n  try {\n    let f = await fetch(url, {\n      method: \"POST\",\n      headers: {\"Content-Type\": \"application/json\"},\n      body: JSON.stringify(body)\n    }).then((res) => res.json())\n    return f\n  }catch {\n    return null\n  }\n}\n\npost(\"/ts/getQuickInfoAtPosition\", {args: [656+17]}).then(async (res) => {\n  console.log(\"res\", res)\n  if (res && res.displayParts){\n    let result = await post(\"/ts/displayPartsToString\", {args: [res.displayParts]})\n    let description = \"\"\n    res.documentation?.length \n      ? description += await post(\"/ts/displayPartsToString\", {args: [res.documentation]})\n      : null\n    console.log(\"result\", result)\n    document.body.innerHTML = `\n    <h2 style=\"color: white; font-family: monospace\">${result}</h4>\n    <p style=\"color: white; font-family: monospace\">${description}</p>\n    \n    `\n  }\n})\n\n\n",
       "cursor": 0,
       "active": false,
       "focus": false
@@ -22,10 +22,19 @@
     {
       "type": "code",
       "id": "h9itpr",
-      "start": 895,
+      "start": 1531,
       "focused": false,
-      "output": "\n",
+      "output": "\n\n\n\n\n\n",
       "cursor": 0,
+      "active": false,
+      "focus": false
+    },
+    {
+      "type": "load-component",
+      "id": "zmfjz1",
+      "start": 1537,
+      "path": "",
+      "output": "",
       "active": true,
       "focus": true
     }
