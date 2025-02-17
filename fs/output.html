@@ -1,0 +1,140 @@
+<script type="module"> 
+        const SOURCE_PATH = "test/omama-feed.json"
+        import { mut,render, html, sig, mem, eff_on } from "/lib/solid/monke.js"
+
+let M = mut({})
+document.M = M
+
+// Get the channel
+export const auth = ''
+const defer = (fn, t = 200) => setTimeout(fn, t)
+
+defer(function() {
+  let E = M.EDITOR
+  // save this file
+  E.state.save("test/omama-feed.json")
+})
+
+let m_editor
+function poll_editor(fn, interval = 150, count=0){
+  if (count > 20) { console.error("FUCKKKKKK"); return }
+  defer(function() {
+    let E = M.EDITOR
+    console.log('polled:',E)
+	if (!E) poll_editor(fn, interval, count + 1)
+    else {
+      m_editor = E;
+      console.log('editor at: ', count, m_editor);
+      fn()
+   }
+  }, interval)
+}
+
+poll_editor(function() {
+  // iframe 40,60
+  // editor 0,40
+  
+  m_editor.positioner.w.set(30)
+  m_editor.iframe_pos.w.set(100 - m_editor.positioner.w())
+  m_editor.iframe_pos.x.set(m_editor.positioner.w())
+  
+})
+
+
+
+let options = {
+	headers: {
+		Authorization: "Bearer " + auth,
+	}
+}
+let channel
+
+async function init() {
+ channel = await fetch("https://api.are.na/v2/channels/acha-acha-twxwkjoba9s?per=100", options)
+  .then( (response) => response.json() );
+  
+  console.log("title", channel.title)
+  
+  let html_str=""
+  let css  = `
+  <style>
+    body {
+      font-family: monospace;
+      display: grid;
+      grid-template-columns: repeat( auto-fit, minmax(300px, 1fr) );
+    }
+    
+    h2 {
+      font-size: 1.8em;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 5px;
+      color: #ddd;
+    }
+
+    .block {
+      overflow: hidden;
+      padding: 10px;
+      width: 300px;
+      border: 1px solid #eee;
+      margin: 10px;
+      display: flex;
+      flex-direction: column;
+      align-item: center;
+      justify-content: center;
+    }
+  `
+  
+  let title = (block) => "<h2>" + block.title + "</h2>"
+  let image = (block) => `<img src="${block.image?.display?.url}"></img>`
+  let content = (block) => block.content_html
+  let animate = (i) => `
+    .block_${i+1} {
+      animation: animate_${i+1} ${(i+1)/10}s infinite;
+    }
+
+    @keyframes animate_${i+1} {
+      0% {opacity: 0;}
+      50% {opacity: 1;}
+      100% {opacity: 0;}
+    }
+  `
+  
+  channel.contents.forEach((block, i) => {
+    html_str += `<div class="block block_${i}">`
+    
+    if (block.class == "Attachment" 
+        || block.class == "Link" 
+        || block.class == "Image"){
+      
+      html_str += title(block)
+      html_str += image(block)
+    }
+      
+    else if (block.class == "Text") {
+      html_str += title(block)
+      html_str += content(block)
+    }
+    
+    html_str += "</div>"
+  })
+
+  css+=" </style> "
+
+  return css+html_str
+}
+
+init().then((res) => document.body.innerHTML = res)
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </script>

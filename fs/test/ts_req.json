@@ -3,7 +3,7 @@
     {
       "type": "code",
       "output": "import {mut} from \"/lib/solid/monke.js\"\n\nconst M = mut({});\ndocument.M = M;\nconst defer = (fn, t = 200) => setTimeout(fn, t)\n\nlet m_editor \nfunction poll_editor(fn, interval = 150, count = 0){\n  defer(function() {\n    let E = M.EDITOR\n    console.log('polled:',E)\n\tif (!E) poll_editor(fn, interval, count + 1)\n    else {\n      m_editor = E;\n      console.log('editor after, ', count,': ', m_editor);\n      fn()\n   }\n  }, interval)\n}\nconst save = (path) =>  m_editor.state.save(path) \npoll_editor(() => save(\"test/ts_req.json\"), 500)\n\n\n/**\n* This is a description of post method\n* @param {string} url \n* @param {Object} body \n* @return {Promise<Object | null>}\n*/\n\n",
-      "active": false,
+      "active": true,
       "focus": false,
       "start": 0,
       "focused": false,
@@ -35,8 +35,8 @@
       "start": 1537,
       "path": "",
       "output": "",
-      "active": true,
-      "focus": true
+      "active": false,
+      "focus": false
     }
   ],
   "output": ""

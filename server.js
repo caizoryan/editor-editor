@@ -267,15 +267,7 @@ const get_path_transformed = (req, res) => {
 
 
 const get_path = get_path_base(CONFIG.DIR);
-const get_dirs = (req, res) => {
-	console.log("GETTTING DIRS")
-	console.log("GETTTING DIRS")
-	console.log("GETTTING DIRS")
-	console.log("GETTTING DIRS")
-	let dir_data = get_directory("")
-	console.log(dir_data)
-	res.json(dir_data)
-}
+const get_dirs = (req, res) => res.json(get_directory(""))
 const get_library = get_path_base(CONFIG.LIB);
 const get_exists = get_exists_base(CONFIG.DIR);
 //
@@ -300,21 +292,15 @@ const is_file = (file_name) => {
 };
 
 /** ---------------------------------
- * @param {string} path
+ * @param {string} _path
  * @returns {Dir}
  * ---------------------------------- */
 function get_directory(_path) {
-	console.log("tryin to get dir", _path)
-	const full_path_relative = path.join(".", _path)
-	const full_path = "." + CONFIG.DIR + _path
+	const full_path = path.join(".", _path)
+	if (!fs.existsSync(full_path)) return null;
 
-	console.log("full path", full_path_relative)
-	if (!fs.existsSync(full_path_relative)) return null;
-	console.log("exists", full_path_relative)
-
-	const files = fs.readdirSync(full_path_relative).filter((p) => is_file(path.join(full_path_relative, p)))
-	const dirs = fs.readdirSync(full_path_relative).filter((p) => !is_file(path.join(full_path_relative, p)))
-	console.log("got dir", _path, dirs, files)
+	const files = fs.readdirSync(full_path).filter((p) => is_file(path.join(full_path, p)))
+	const dirs = fs.readdirSync(full_path).filter((p) => !is_file(path.join(full_path, p)))
 	return { type: "dir", files, dirs };
 }
 
@@ -339,7 +325,7 @@ app.get("/", (req, res) => {
 app.get("/exists/*", get_exists);
 app.get("/fs/*", get_path);
 app.get("/fs-run/*", get_path_transformed);
-app.get("/f", get_dirs);
+// app.get("/f", get_dirs);
 app.get("/lib/*", get_library);
 
 app.get("/tsserver/semantic_diagnostics", (res, req) => tsserver("semantic_diagnostics", res, req))
