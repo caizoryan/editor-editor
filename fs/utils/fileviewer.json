@@ -5,19 +5,28 @@
       "id": "tma0w",
       "start": 0,
       "focused": false,
-      "output": "import {mut} from \"/lib/solid/monke.js\"\n\nconst defer = (fn, t = 400) => setTimeout(fn, t)\nconst M = mut({})\ndocument.M = M\n\ndefer(function() { save_path(\"utils/fileviewer.json\") }, 2500)\n\nfunction load_path(path){\n  if (M) { if (M.EDITOR) M.EDITOR.state.load(path) }\n}\n\nfunction save_path(path){\n  if (M) { if (M.EDITOR) M.EDITOR.state.save(path) }\n}\n\nfunction show_dir(path, dir){\n  let path_split = path.split(\"/\")\n  let path_slice = path_split.slice(0, path_split.length - 2)\n  let back_path = path_slice.join(\"/\")\n  let title = path == \"\" ? \"\" : \"../\" + back_path\n  let back = p(title, () => check_dir(back_path))\n  let files = dir.files.map((f) => p(f, () => check_dir(path+\"/\"+f)))\n  let dirs = dir.dirs.map((f) => dir_elem(f, () => check_dir(path+\"/\"+f)))\n  \n  document.body.innerHTML = \"\"\n  document.body.appendChild(back)\n  dirs.forEach((f) => document.body.appendChild(f))\n  files.forEach((f) => document.body.appendChild(f))\n}\n\nfunction file(src) {\n  let elem = document.createElement(\"iframe\")\n  elem.src = src\n  return elem\n}\n\nfunction dir_elem(text, onclick){\n  let elem = document.createElement(\"p\")\n  \n  let style = {\n    border: `1px solid white`,\n    color: \"white\",\n    padding: `10px`,\n    width: 'min-content',\n    minWidth: '300px',\n    cursor: \"pointer\"\n  }\n  \n  Object.entries(style).forEach(([key, value]) => elem.style[key] = value)\n  \n  elem.innerText = text\n  elem.onclick = onclick\n\n  return elem\n}\n\nfunction p(text, onclick){\n  let elem = document.createElement(\"p\")\n  elem.innerText = text\n  elem.onclick = onclick\n  \n  let style = {\n    color: \"white\",\n    width: 'min-content',\n    minWidth: '300px',\n    cursor: \"pointer\"\n  }\n  \n  Object.entries(style).forEach(([key, value]) => elem.style[key] = value)\n\n  return elem\n}\n\nfunction check_dir(path = \"\", root = \"/fs/\"){\n  fetch(root+path)\n    .then((res) => {\n      try{ return res.json() }\n      catch { return null }\n    })\n    .then((res) => {\n      console.log(res)\n      if (!res) document.body.appendChild(file(root+path))\n      if (res.type == \"dir\") show_dir(path, res) \n      else document.body.appendChild(file(root+path))\n    })\n}\n\ncheck_dir(\"\")\n\n",
-      "cursor": 0,
-      "active": false,
-      "focus": false
+      "output": "import {mut, h} from \"/lib/solid/monke.js\"\n\nconst defer = (fn, t = 400) => setTimeout(fn, t)\nconst M = mut({})\ndocument.M = M\n\ndefer(function() { save_path(\"utils/fileviewer.json\") }, 2500)\n\nfunction load_path(path){\n  if (M) { if (M.EDITOR) M.EDITOR.state.load(path) }\n}\n\nfunction save_path(path){\n  if (M) { if (M.EDITOR) M.EDITOR.state.save(path) }\n}\n\nfunction show_dir(path, dir){\n  let path_split = path.split(\"/\")\n  let path_slice = path_split.slice(0, path_split.length - 2)\n  let back_path = path_slice.join(\"/\")\n  let title = path == \"\" ? \"\" : \"../\" + back_path\n  let back = p(title, () => check_dir(back_path))\n  let files = dir.files.map((f) => p(f, () => check_dir(path+\"/\"+f)))\n  let dirs = dir.dirs.map((f) => dir_elem(f, () => check_dir(path+\"/\"+f)))\n  \n  document.body.innerHTML = \"\"\n  document.body.appendChild(back)\n  dirs.forEach((f) => document.body.appendChild(f))\n  files.forEach((f) => document.body.appendChild(f))\n}\n\nfunction file(src) {\n  let elem = document.createElement(\"iframe\")\n  elem.src = src\n  return elem\n}\n\nfunction dir_elem(text, onclick){\n  let style = {\n    \"font-family\": \"monospace\",\n    border: `1px solid white`,\n    color: \"white\",\n    padding: `10px`,\n    width: 'min-content',\n    \"min-width\": '300px',\n    cursor: \"pointer\"\n  }\n\n  return  h(\"p\", {style, onclick}, text )()\n}\n\nfunction p(text, onclick){\n  let style = {\n    \"font-family\": \"monospace\",\n    color: \"white\",\n    width: 'min-content',\n    \"min-width\": '300px',\n    cursor: \"pointer\"\n  }\n\n  return h(\"p\", {style, onclick}, text)()\n}\n\nfunction check_dir(path = \"\", root = \"/fs/\"){\n  fetch(root+path)\n    .then((res) => {\n      try{ return res.json() }\n      catch { return null }\n    })\n    .then((res) => {\n      console.log(res)\n      if (!res) document.body.appendChild(file(root+path))\n      if (res.type == \"dir\") show_dir(path, res) \n      else document.body.appendChild(file(root+path))\n    })\n}\n\ncheck_dir(\"\")\n\n\n\n\n\n\n",
+      "cursor": 1366,
+      "active": true,
+      "focus": true
     },
     {
       "type": "load-component",
       "id": "0otrjh",
-      "start": 2140,
+      "start": 1931,
       "path": "",
       "output": "",
-      "active": true,
-      "focus": true
+      "active": false,
+      "focus": false
+    },
+    {
+      "type": "save-component",
+      "id": "d2db1m",
+      "start": 1931,
+      "path": "utils/fileviewer.json",
+      "output": "",
+      "active": false,
+      "focus": false
     }
   ],
   "output": ""
