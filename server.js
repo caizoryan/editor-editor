@@ -339,6 +339,18 @@ app.post("/tsserver/completion_at", (res, req) => tsserver("completion_at", res,
 app.post("/fs/*", write_path);
 app.put("/fs/*", overwrite_path);
 
+let endpoints = fs.readdirSync(path.join("./server/")).filter(p => p.split(".").pop() == "js")
+console.log("ENDPOINTS", endpoints)
+endpoints.forEach(async (end) => {
+	let points = await import(path.join(path.resolve("./server/"), end));
+	let replaced = end.replace(".js", "")
+
+	if (points.GET) app.get("/" + replaced + "/*", points.GET)
+	if (points.POST) app.post("/" + replaced + "/*", points.POST)
+	if (points.PUT) app.put("/" + replaced + "/*", points.PUT)
+})
+
+
 const port = 8888;
 app.listen(port, () => {
 	console.log(`Server running on port ${port}`);
