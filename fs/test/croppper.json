@@ -1,0 +1,23 @@
+{
+  "blocks": [
+    {
+      "type": "code",
+      "output": "import { render, sig, eff_on, mut, mem, html } from \"/lib/solid/monke.js\"\n\nconst M = mut({});\ndocument.M = M;\nconst defer = (fn, t = 200) => setTimeout(fn, t)\n\nlet x = sig(0)\nlet y = sig(0)\nlet w = sig(10)\nlet h = sig(0)\n\ndocument.body.addEventListener(\"mousemove\", (e) => {\n  console.log(e.clientX, e.clientY)\n  if (e.clientX) x.set(e.clientX)\n  if (e.clientY) y.set(e.clientY)\n})\n\n\ndocument.onkeydown = (e) => {\n  if (e.key == \"L\") w.set(w() + 10) \n  if (e.key == \"H\") w.set(w() - 10) \n  if (e.key == \"J\") h.set(h() + 10) \n  if (e.key == \"K\") h.set(h() - 10) \n}\n\nlet style = mem(() => `\n  top: ${y()}px;\n  left: ${x()}px;\n  width: ${w()}px;\n  height: ${h()}px;\n  border: 1px red solid;\n  position: fixed;\n`)\n\nconst src = \"/fs/media/beauty_c.mp4\"\n\nlet loaded = function(e) {\n  let vw = this.videoWidth\n  let vh = this.videoHeight\n\n  console.log(\"width\", vw)\n  console.log(\"height\", vh)\n\n  let div = vw/vh\n  \n  let reduced_w = vw/600\n  let reduced_h = vh/(600/div)\n\n  console.log(\"reduced is equal:\", reduced_h == reduced_w)\n  console.log(\"reduced is:\", reduced_h)\n  \n  console.log(\"actual size\", 600 * reduced_w)\n  console.log(\"actual size\", (600/div) * reduced_h)\n}\n\nfunction Root() {\n  return html`\n    div\n      .cropper [style=${style}]\n      video [ \n        src=${src}\n        onloadedmetadata=${loaded}  \n        width=600px \n        controls=true ]\n  `\n  \n}\n\nrender(Root, document.body)\n\n\n\n",
+      "active": false,
+      "focus": false,
+      "start": 0,
+      "focused": false,
+      "cursor": 834
+    },
+    {
+      "type": "save-component",
+      "id": "n3itp5",
+      "start": 1399,
+      "path": "test/croppper.json",
+      "output": "",
+      "active": true,
+      "focus": true
+    }
+  ],
+  "output": ""
+}
