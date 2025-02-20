@@ -1,4 +1,4 @@
-import { create_frames, crop } from "../lib/ffmpeg/utils.js"
+import { create_frames, crop, crop_relative } from "../lib/ffmpeg/utils.js"
 
 import path from "path"
 import fs from "fs"
@@ -40,15 +40,13 @@ export const POST = async (req, res) => {
 
 	// check if input exists
 	if (fs.existsSync(input)) {
-		// check if output dir doesn't exist and create
-		// if (!fs.existsSync(output)) fs.mkdirSync(output, { recursive: true })
 
 		// run action
 		if (action == "crop") {
-			const { x, y, w, h } = args
-			let opts = { input, output, x, y, w, h, }
+			const { x, y, w, h, videoWidth, videoHeight } = args
+			let opts = { input, output, x, y, w, h, videoWidth, videoHeight }
 			console.log(opts)
-			crop(opts)
+			crop_relative(opts)
 		}
 
 	} else console.log("inputy no exists")
