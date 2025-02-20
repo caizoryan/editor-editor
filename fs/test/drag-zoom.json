@@ -1,0 +1,23 @@
+{
+  "blocks": [
+    {
+      "type": "code",
+      "output": "import {render, h, sig, mem} from \"/lib/solid/monke.js\"\nimport {drag} from \"/lib/drag.js\"\nimport {createPanZoom} from \"/lib/panzoom/panzoom.js\"\n\n\nlet block = (text, pos = {x: 10, y: 10}) => {\n  let left = sig(pos.x)\n  let top = sig(pos.y)\n  \n  let style = mem(() => `\n    background: white; \n    position: absolute;\n    top: ${top()}px;\n    left: ${left()}px;\n    width: 100px;\n    height: 100px;\n  `)\n  \n  let onref = (e) => { \n    setTimeout(() => drag(e, {set_left: left.set, set_top: top.set}), 10)\n  }\n\n  return h(\"p\", {style: style, ref: onref}, text)\n  \n}\n\nlet Root = () => {\n  let parent_style = `\n    background: pink; \n    padding: 0;\n    margin: 0;\n    position: absolute;\n    width: 800px;\n    height: 800px;\n  `\n\n  let panzoom\n  let parent_ref = (e) => {\n    setTimeout(() =>  panzoom = createPanZoom(e, {}) , 100)\n  }\n  \n  return h(\"div\", {style: parent_style, ref: parent_ref}, \n           () => block(\"hello\", {x: 50, y: 50}),\n           () => block(\"what\", {x: 150, y: 150})\n          )\n}\n\nrender(Root, document.body)\n\n\n\n\n\n\n",
+      "active": false,
+      "focus": false,
+      "start": 0,
+      "focused": false,
+      "cursor": 654
+    },
+    {
+      "type": "save-component",
+      "id": "aralgo",
+      "start": 1041,
+      "path": "test/drag-zoom.json",
+      "output": "",
+      "active": true,
+      "focus": true
+    }
+  ],
+  "output": ""
+}
