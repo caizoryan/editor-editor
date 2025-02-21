@@ -9,20 +9,6 @@ import { create_env, extra } from "./ts/index.js";
 
 // **********************************
 // ----------------------------------
-// TODO: return file and folder with read dir fn
-// ----------------------------------
-// **********************************
-// const fs = require('node:fs');
-//
-//
-// fs.readdirSync(folderPath)
-//   .map(fileName => {
-//     return path.join(folderPath, fileName);
-//   })
-//   .filter(isFile);
-
-// **********************************
-// ----------------------------------
 // TYPES
 // ----------------------------------
 // **********************************
