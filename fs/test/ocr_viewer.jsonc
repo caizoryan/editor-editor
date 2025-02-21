@@ -1,0 +1,32 @@
+{
+  "blocks": [
+    {
+      "type": "code",
+      "output": "import {mut} from \"/lib/solid/monke.js\"\n\nconst M = mut({});\ndocument.M = M;\nconst defer = (fn, t = 200) => setTimeout(fn, t)\n\nlet directory = \"/fs/media/scrolls/gaming/\"\n\nasync function get_images(dir){\n return fetch(dir)\n   .then((res) => res.json())\n   .then((res) => res.files) \n}\n\nlet canvas = document.createElement(\"canvas\")\n\nfunction create_canvas(img, file){\n  // document.body.appendChild(img)\n  let ctx\n  setTimeout(() => {\n    let w = img.width\n    let h = img.height\n    console.log(\"w\", w, \"h\", h)\n\n    let canvas = document.createElement(\"canvas\")\n    ctx = canvas.getContext(\"2d\");\n    canvas.width = w\n    canvas.height = h\n\n    document.body.appendChild(canvas)\n    console.log('drawingimage')\n    ctx.drawImage(img, 0, 0)\n    \n  } , 100)\n  \n  let f = \"/ocr\"+directory.replace(\"/fs\", \"\")+file \n  fetch(f).then((res) => res.json())\n    .then((res) =>{\n    setTimeout(() => {\n      res.forEach((box) => {\n        console.log(\"drawing\", box.box)\n        ctx.lineWidth =1 \n        ctx.strokeStyle=\"red\"\n        \n        ctx.beginPath()\n        \n        ctx.moveTo(...box.box[0].map((e) => e - 5))\n        ctx.lineTo(...box.box[1].map((e) => e - 5))\n        ctx.lineTo(...box.box[2].map((e) => e - 5))\n        ctx.lineTo(...box.box[3].map((e) => e - 5))\n        \n        ctx.closePath()\n        ctx.stroke()\n        \n      })\n    }, 200)\n    })\n}\n\nget_images(directory).then((files) => {\n  files.forEach((file, i) => {\n    if (i!=18) return\n    \n    let img = document.createElement(\"img\")\n    img.src = directory+file\n    create_canvas(img, file)\n  })\n})\n\n",
+      "active": true,
+      "start": 0,
+      "focused": false,
+      "cursor": 1443,
+      "focus": false
+    },
+    {
+      "type": "load-component",
+      "id": "1yssq",
+      "start": 1569,
+      "path": "",
+      "output": "",
+      "active": false,
+      "focus": false
+    },
+    {
+      "type": "save-component",
+      "id": "ynttt",
+      "start": 1569,
+      "path": "test/ocr_viewer.jsonc",
+      "output": "",
+      "active": false,
+      "focus": false
+    }
+  ],
+  "output": ""
+}

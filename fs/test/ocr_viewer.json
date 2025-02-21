@@ -1,0 +1,32 @@
+{
+  "blocks": [
+    {
+      "type": "code",
+      "output": "import {mut} from \"/lib/solid/monke.js\"\n\nconst M = mut({});\ndocument.M = M;\nconst defer = (fn, t = 200) => setTimeout(fn, t)\n\nlet directory = \"/fs/media/scrolls/gaming/\"\n\nasync function get_images(dir){\n return fetch(dir)\n   .then((res) => res.json())\n   .then((res) => res.files) \n}\n\nlet canvas = document.createElement(\"canvas\")\n\nfunction create_canvas(img, file){\n  // document.body.appendChild(img)\n  let ctx\n  setTimeout(() => {\n    let w = img.width\n    let h = img.height\n    console.log(\"w\", w, \"h\", h)\n\n    let canvas = document.createElement(\"canvas\")\n    ctx = canvas.getContext(\"2d\");\n    canvas.width = w\n    canvas.height = h\n\n    document.body.appendChild(canvas)\n    ctx.drawImage(img, 0,0)\n    \n  } , 100)\n  \n  let f = \"/ocr\"+directory.replace(\"/fs\", \"\")+file \n  fetch(f).then((res) => res.json())\n    .then((res) => console.log(res))\n}\n\nget_images(directory).then((files) => {\n  files.forEach((file, i) => {\n    if (i>0) return\n    let img = document.createElement(\"img\")\n    img.src = directory+file\n    create_canvas(img, file)\n  })\n})\n\n",
+      "active": false,
+      "start": 0,
+      "focused": false,
+      "cursor": 704,
+      "focus": false
+    },
+    {
+      "type": "load-component",
+      "id": "1yssq",
+      "start": 1057,
+      "path": "",
+      "output": "",
+      "active": false,
+      "focus": false
+    },
+    {
+      "type": "save-component",
+      "id": "ynttt",
+      "start": 1057,
+      "path": "test/ocr_viewer.json",
+      "output": "",
+      "active": true,
+      "focus": false
+    }
+  ],
+  "output": ""
+}

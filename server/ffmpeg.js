@@ -49,6 +49,14 @@ export const POST = async (req, res) => {
 			crop_relative(opts)
 		}
 
+		if (action == "frames") {
+			const { fps } = args
+			if (!fps) console.log("no fps")
+			let opts = { fps }
+			console.log(opts)
+			create_frames(input, output, fps)
+		}
+
 	} else console.log("inputy no exists")
 }
 
