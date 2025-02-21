@@ -1,0 +1,72 @@
+{
+  "blocks": [
+    {
+      "type": "code",
+      "output": "import {mut, render, html} from \"/lib/solid/monke.js\"\n\nlet copy = [\n  {title: \"Conditional Design\",\n   body: `Through the influence of the media and technology on our world, our lives are increasingly characterized by speed and constant change. We live in a dynamic, data-driven society that is continually sparking new forms of human interaction and social contexts. Instead of romanticizing the past, we want to adapt our way of working to coincide with these developments, and we want our work to reflect the here and now. We want to embrace the complexity of this landscape, deliver insight into it and show both its beauty and its shortcomings. Our work focuses on processes rather than products: things that adapt to their environment, emphasize change and show difference. Instead of operating under the terms of Graphic Design, Interaction Design, Media Art or Sound Design, we want to introduce Conditional Design as a term that refers to our approach rather than our chosen media. We conduct our activities using the methods of philosophers, engineers, inventors and mystics. `},\n\n  {title: \"Process\",\n   body: `The process is the product. The most important aspects of a process are time, relationship and change. The process produces formations rather than forms. We search for unexpected but correlative, emergent patterns. Even though a process has the appearance of objectivity, we realize the fact that it stems from subjective intentions.`}\n]\n\n\n",
+      "start": 0,
+      "drag_x": 19.1715332337963,
+      "drag_y": 93.85285833162227,
+      "focused": false,
+      "cursor": 1458,
+      "active": false,
+      "focus": false
+    },
+    {
+      "type": "load-component",
+      "id": "3vmiea",
+      "start": 1462,
+      "drag_x": 86.54023970264328,
+      "drag_y": 29.593821588744085,
+      "path": "test",
+      "output": "",
+      "active": false,
+      "focus": false
+    },
+    {
+      "type": "save-component",
+      "id": "jzv2xc",
+      "start": 1462,
+      "drag_x": 807.9506478288886,
+      "drag_y": 75.31159043399225,
+      "path": "",
+      "output": "",
+      "active": true,
+      "focus": true
+    },
+    {
+      "type": "code",
+      "id": "eak1ll",
+      "start": 1462,
+      "drag_x": 707.0895250445077,
+      "drag_y": 180.67187354555247,
+      "focused": false,
+      "output": "// const Grid = () => {\n\n//     var req = Object.assign({\n//       x:0,\n//       y:0,\n//       columns:10,\n//       rows:1,\n//       gutterWidth: 0,\n//       gutterHeight: 0,\n//       moduleWidth:50,\n//       moduleHeight:500\n//     }, options);\n\n//     // if gutter is set, override gutterWidth and gutterHeight\n//     if(typeof req.gutter !== 'undefined') {\n//       req.gutterWidth = req.gutter;\n//       req.gutterHeight = req.gutter;\n//     }\n\n//     // if width is set, override moduleWidth\n//     if(typeof req.width !== 'undefined') {\n//       req.moduleWidth = (req.width - ((req.columns-1) * req.gutterWidth)) / req.columns;\n//     } else {\n//       req.width = (req.moduleWidth * req.columns) + (req.gutterWidth * (req.columns-1))\n//     }\n\n//     // if height is set, override moduleHeigt\n//     if(typeof req.height !== 'undefined') {\n//       req.moduleHeight = (req.height - ((req.rows-1) * req.gutterHeight)) / req.rows;\n//     } else {\n//       req.height = (req.moduleHeight * req.rows) + (req.gutterHeight * (req.rows-1))\n//     }\n\n//     // Compute the grid\n//     this.state = req;\n//     this.modules = [];\n//     for(var y = 0; y < req.rows; y++) {\n//       for(var x = 0; x < req.columns; x++) {\n//         this.modules.push({\n//           x: req.x + (x * req.moduleWidth) + (x * req.gutterWidth),\n//           y: req.y + (y * req.moduleHeight) + (y * req.gutterHeight),\n//           width: req.moduleWidth,\n//           height: req.moduleHeight\n//         });\n//       }\n//     }\n\n//   }\n\n//   EasyGrid.prototype.getModule = function(column, row){\n//     var index = (column-1) + ((row-1) * this.state.columns)\n//     if(this.modules[index]) {\n//       return this.modules[index]\n//     }\n//     else {\n//       throw new Error('The column or row does not exist');\n//     }\n//   }\n\n// }\n\n\n",
+      "cursor": 1813,
+      "active": false,
+      "focus": false
+    },
+    {
+      "type": "group",
+      "id": "3uflz8",
+      "start": 3276,
+      "drag_x": 85.29281427793575,
+      "drag_y": 77.10928205779936,
+      "output": "",
+      "blocks": [],
+      "active": false
+    },
+    {
+      "type": "code",
+      "id": "abesam",
+      "start": 3276,
+      "drag_x": 1516.6166647245827,
+      "drag_y": 289.9725780663518,
+      "focused": false,
+      "output": "\nconst M = mut({});\ndocument.M = M;\nconst defer = (fn, t = 200) => setTimeout(fn, t)\n\nconst content = (title, body) => {\n  return html`\n  h4 -- ${title}\n  p -- ${body}\n  `\n}\n\nconst Root = () => {\n  let style = `\n  .page {\n    width: 11in;\n    height: 8.5in;\n    background: white;\n    position: fixed;\n    left: 50px;\n    top: 50px;\n  }\n  `\n\n  let c = copy.map((section) => {\n    return content(section.title, section.body)\n  })\n\n  \n  return html`\n  style -- ${style}\n  .page -- ${c}\n  `\n}\n\nrender(Root,document.body)\n\n\n\n",
+      "cursor": 133,
+      "active": false,
+      "focus": false
+    }
+  ],
+  "output": ""
+}
