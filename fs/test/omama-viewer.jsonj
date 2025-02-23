@@ -1,0 +1,74 @@
+{
+  "blocks": [
+    {
+      "type": "load-component",
+      "id": "ctkln",
+      "start": 0,
+      "drag_x": 35.95947368653305,
+      "drag_y": 94.0131578366737,
+      "path": "",
+      "output": "",
+      "active": false,
+      "focus": false
+    },
+    {
+      "type": "save-component",
+      "id": "zp9lli",
+      "start": 0,
+      "drag_x": 32.61348456052652,
+      "drag_y": 167.0799748226278,
+      "path": "test/omama-viewer.jsonj",
+      "output": "",
+      "active": false,
+      "focus": false
+    },
+    {
+      "type": "code",
+      "output": "import {mut} from \"/lib/solid/monke.js\"\nimport { THREE, addons } from \"/lib/threejs/three.js\"\n\nconst scene = new THREE.Scene();\nconst camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );\nconst orbit = addons.OrbitControls\n\nlet structure = undefined\n\n\nconst renderer = new THREE.WebGLRenderer();\nrenderer.setSize( window.innerWidth, window.innerHeight );\ndocument.body.appendChild( renderer.domElement );\n\n\n\nlet c = new orbit(camera, renderer.domElement)\ncamera.position.z = 5;\nc.update()\n\nlet x = 0\nfunction animate() {\n  requestAnimationFrame(animate)\n  \n  if (structure) {\n    if (x > 500) return\n    x++\n    Object.values(structure).forEach((category) => {\n      if (category) {\n        category.forEach((el) => {\n          if (el && el.tick && typeof el.tick == \"function\") {\n            //el.tick()\n          }\n        })\n      }\n      // el.tick()\n    })\n  }\n  \n  renderer.render( scene, camera );\n  c.update()\n}\n\nanimate()\n\n\n\n\n\n\n",
+      "start": 0,
+      "drag_x": 1154.4967982744517,
+      "drag_y": 461.70618422736453,
+      "focused": false,
+      "cursor": 835,
+      "active": true,
+      "focus": true
+    },
+    {
+      "type": "code",
+      "id": "he3gnn",
+      "start": 978,
+      "drag_x": 1830.1350877115574,
+      "drag_y": 461.7230701913093,
+      "focused": false,
+      "output": "function createPlaneFromImage(imageUrl, pos)  {\n    \n  new THREE.TextureLoader()\n  .load(imageUrl, function(texture){\n    console.log(\"width\",texture.source.data.naturalWidth)\n    console.log(\"height\",texture.source.data.naturalHeight)\n    \n    let w = texture.source.data.naturalWidth\n    let h = texture.source.data.naturalHeight\n  \n    let aspect = w/h\n    let aw = 5\n    let ah = aw / aspect \n      \n      \n    const geometry = new THREE.PlaneGeometry(aw, ah);\n    \n    const material = new THREE.MeshBasicMaterial({ \n        map: texture,\n        transparent: true\n    });\n  \n    \n    // Create mesh\n    const plane = new THREE.Mesh(geometry, material);\n    \n    plane.position.x = pos.x\n    plane.position.y = pos.y\n    plane.position.z = pos.z\n    \n    // Scale the plane to match image dimensions\n    const scale = new THREE.Vector3();\n    texture.image.addEventListener('load', () => {\n        scale.set(texture.image.width, texture.image.height, 1);\n        plane.scale.copy(scale);\n    });\n  \n    scene.add(plane)\n  });\n}\n\n\n\n\n\n\n",
+      "cursor": 0,
+      "active": false,
+      "focus": false
+    },
+    {
+      "type": "code",
+      "id": "wcbpv2",
+      "start": 2017,
+      "drag_x": 2485.868289481232,
+      "drag_y": 462.93885959531735,
+      "focused": false,
+      "output": "\n// createPlaneFromImage(\"/fs/media/flipped_1.jpg\", {x: 0, y:2 , z:-1})\n// createPlaneFromImage(\"/fs/media/flipped_2.jpg\", {x: 0, y:-2 , z:-2})\n\n\nlet dir = \"/fs/media/scrolls/gaming/\"\nfetch(dir)\n  .then((res) => res.json())\n  .then((res) => {\n    console.log(res)\n    let category = {\n      title: \"gaming\",\n      files: res.files.map(file => dir+file)\n    }\n\n    let struct = init_structure([category])\n    console.log(\"struct\",struct)\n    structure = struct\n    \n    // res.files.forEach((file, i) => {\n    //   let path = dir + file\n    //   createPlaneFromImage(path, {x: i*.1, y:0 , z:i*-.1})  \n    // })\n\n  })\n\n\n\n\n\n\n\n",
+      "cursor": 0,
+      "active": false,
+      "focus": false
+    },
+    {
+      "type": "code",
+      "id": "v2a3aw",
+      "start": 2640,
+      "drag_x": 2482.4728702638067,
+      "drag_y": 1130.0154979915533,
+      "focused": false,
+      "output": "\n/**\n@typedef {Object} vec3 \n@property {number} vec3.x\n@property {number} vec3.y\n@property {number} vec3.z\n\n@param {vec3} vec1\n@param {vec3} vec2\n*/\nfunction eq(vec1, vec2){\n  return vec1.x === vec2.x \n    && vec1.y == vec2.y\n    && vec1.z == vec2.z\n}\n/**\n@typedef {Object} category \n@property {string} category.title\n@property {Array<string>} category.files\n\n@param {Array<category>} categories \n*/\nfunction init_structure(categories) {\n  let struct = {}\n\n  categories.forEach((category, c_index) => {\n    let elements = category.files.map((file, e_index) => {\n      let element = {\n        // based on c_index and e_index\n        postion: {\n          x: e_index * .1, \n          y: 0,\n          z: e_index* -.1,\n        },\n\n        // to attach to\n        three: undefined,\n\n        // update fn\n        tick: function(){\n          if (this.three){\n            // check three positon with this position\n            // if not eq, update three position\n            if (!eq(this.three.position, this.position)){\n              this.three.position.x = this.position.x\n              this.three.position.y = this.position.y\n              this.three.position.z = this.position.z\n            }\n          }\n          \n        }\n      }\n      create_image_plane(file, element)\n      return element\n    })\n    struct[category.title] = elements\n  })\n\n  return struct\n  \n  \n  // will accept categories (dir) and textures (files)\n  // will make a data structure\n  // based on data strucutre spawn planes for image\n  // plane maker will attach itself to ref we pass\n  // to elem instance or whatever\n\n  // data structure of each element will have a tick fn\n  // every update cycle this is called\n  \n}\n\nlet loader =new THREE.TextureLoader()\n\nfunction create_image_plane(image, element){\n  loader.load(image, function(texture){\n    let w = texture.source.data.naturalWidth\n    let h = texture.source.data.naturalHeight\n  \n    let aspect = w/h\n    let aw = 5\n    let ah = aw / aspect \n      \n      \n    const geometry = new THREE.PlaneGeometry(aw, ah);\n    \n    const material = new THREE.MeshBasicMaterial({ \n        map: texture,\n        opacity: .5,\n        transparent: true\n    });\n  \n    \n    // Create mesh\n    const plane = new THREE.Mesh(geometry, material);\n    \n    // Scale the plane to match image dimensions\n    const scale = new THREE.Vector3();\n    texture.image.addEventListener('load', () => {\n        scale.set(texture.image.width, texture.image.height, 1);\n        plane.scale.copy(scale);\n    });\n  \n    scene.add(plane)\n    element.three = plane\n  });\n}\n  \n  \n  \n  \n  \n  \n  \n  \n  \n  \n  \n\n\n",
+      "cursor": 1001,
+      "active": false,
+      "focus": false
+    }
+  ],
+  "output": ""
+}
