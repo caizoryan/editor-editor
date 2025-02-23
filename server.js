@@ -137,6 +137,8 @@ function overwrite_path(req, res) {
 	has_extension(file_path)
 		? write_file(full_path, content)
 		: write_dir(full_path);
+
+	res.status(200).send()
 }
 
 // **********************************

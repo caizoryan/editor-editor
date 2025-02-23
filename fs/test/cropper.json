@@ -2,29 +2,36 @@
   "blocks": [
     {
       "type": "code",
-      "output": "import { render, sig, eff_on, mut, mem, html } from \"/lib/solid/monke.js\"\n\n\nconst M = mut({});\ndocument.M = M;\nconst defer = (fn, t = 200) => setTimeout(fn, t)\nconst current_width = 400\nlet x = sig(0) \nlet y = sig(0)\nlet w = sig(10)\nlet h = sig(0)\nlet videoWidth = current_width\nlet videoHeight = current_width\n\ndocument.body.addEventListener(\"mousemove\", (e) => {\n  if (e.clientX) x.set(e.clientX-10)\n  if (e.clientY) y.set(e.clientY-10)\n})\n\n\ndocument.onkeydown = (e) => {\n  if (e.key == \"L\") w.set(w() + 10) \n  if (e.key == \"H\") w.set(w() - 10) \n  if (e.key == \"J\") h.set(h() + 10) \n  if (e.key == \"K\") h.set(h() - 10) \n  if (e.key == \"Enter\") { \n    crop(x(), y(), w(), h(), videoWidth, videoHeight) \n  }\n}\n\n\nlet style = mem(() => `\n  top: ${y()}px;\n  left: ${x()}px;\n  width: ${w()}px;\n  height: ${h()}px;\n  border: 1px red solid;\n  position: fixed;\n`)\n\nconst src = \"/fs/media/scrolls/gaming.mp4\"\n\nlet loaded = function(e) {\n  let vw = this.videoWidth\n  let vh = this.videoHeight\n  let div = vw/vh\n  this.height = current_width/div\n  videoHeight = this.height\n  \n  console.log(\"width\", this.videoWidth)\n  console.log(\"height\", this.videoHeight)\n  \n  console.log(\"el width\", this.width)\n  console.log(\"el height\", this.height)\n}\n\nfunction Root() {\n  return html`\n    style ---\n\n    *{\n      padding: 0px;\n      margin: 0px;\n    }\n\n    ---\n    div\n      .cropper [style=${style}]\n      video [ \n        src=${src}\n        onloadedmetadata=${loaded}  \n        controls=true\n        width=${current_width+\"px\"}  \n        ]\n  `\n}\n\nfunction crop(x, y, w, h, videoWidth, videoHeight){\n  let rename = src.replace(\".mp4\", \"-cropped.mp4\")\n  \n  fetch(\"/ffmpeg/\", {\n    method: \"POST\",\n    headers: {\"Content-Type\": \"application/json\"},\n    body: JSON.stringify({\n      action: \"crop\",\n      input: src,\n      output: rename,\n      args: { x, y, h, w, videoWidth, videoHeight }\n    })\n  }).then((res) => console.log(res))\n}\n\nfunction create_frames(){\n  let rename = src.replace(\".mp4\", \"\")\n  \n  fetch(\"/ffmpeg/\", {\n    method: \"POST\",\n    headers: {\"Content-Type\": \"application/json\"},\n    body: JSON.stringify({\n      action: \"frames\",\n      input: src,\n      output: rename,\n      args: {fps: \"1/15\"}\n    })\n  }).then((res) => console.log(res))\n}\n\ncreate_frames()\n\n\nrender(Root, document.body)\n\n\n\n\n\n\n\n\n\n",
-      "active": true,
-      "focus": true,
+      "output": "import { render, sig, eff_on, mut, mem, html } from \"/lib/solid/monke.js\"\n\n\nconst M = mut({});\ndocument.M = M;\nconst defer = (fn, t = 200) => setTimeout(fn, t)\nconst current_width = 400\nlet x = sig(0) \nlet y = sig(0)\nlet w = sig(10)\nlet h = sig(0)\nlet videoWidth = current_width\nlet videoHeight = current_width\n\n// document.body.addEventListener(\"mousemove\", (e) => { //   if (e.clientX) x.set(e.clientX-10) //   if (e.clientY) y.set(e.clientY-10)\n// })\n\n\ndocument.onkeydown = (e) => {\n  \n  if (e.key == \"l\") x.set(x() + 10) \n  if (e.key == \"h\") x.set(x() - 10) \n  if (e.key == \"j\") y.set(y() + 10) \n  if (e.key == \"k\") y.set(y() - 10) \n  if (e.key == \"L\") w.set(w() + 10) \n  if (e.key == \"H\") w.set(w() - 10) \n  if (e.key == \"J\") h.set(h() + 10) \n  if (e.key == \"K\") h.set(h() - 10) \n  if (e.key == \"Enter\") { \n    crop(x(), y(), w(), h(), videoWidth, videoHeight) \n  }\n}\n\n\nlet style = mem(() => `\n  top: ${y()}px;\n  left: ${x()}px;\n  width: ${w()}px;\n  height: ${h()}px;\n  border: 1px red solid;\n  position: absolute;\n`)\n\nconst src = \"/fs/media/scrolls/fast-gamingc.mp4\"\n\nlet loaded = function(e) {\n  let vw = this.videoWidth\n  let vh = this.videoHeight\n  let div = vw/vh\n  this.height = current_width/div\n  videoHeight = this.height\n  \n  console.log(\"width\", this.videoWidth)\n  console.log(\"height\", this.videoHeight)\n  \n  console.log(\"el width\", this.width)\n  console.log(\"el height\", this.height)\n}\n\nfunction Root() {\n  return html`\n    style ---\n\n    *{\n      padding: 0px;\n      margin: 0px;\n    }\n\n    .container {\n      padding: 10px;\n      display: grid;\n    }\n\n    .container button {\n      width: 100px;\n    }\n\n    .video-container {\n      position: absolute;\n      left : 10px;\n      top : 50px;\n      overflow: hidden;\n    }\n\n    ---\n    .container\n      button [onclick=${create_frames}] -- create frames\n      .video-container \n        .cropper [style=${style}]\n        video [ \n          src=${src}\n          onloadedmetadata=${loaded}  \n          controls=true\n          width=${current_width+\"px\"}  \n          ]\n  `\n}\n\nfunction crop(x, y, w, h, videoWidth, videoHeight){\n  let rename = src.replace(\".mp4\", \"-cropped.mp4\")\n  \n  fetch(\"/ffmpeg/\", {\n    method: \"POST\",\n    headers: {\"Content-Type\": \"application/json\"},\n    body: JSON.stringify({\n      action: \"crop\",\n      input: src,\n      output: rename,\n      args: { x, y, h, w, videoWidth, videoHeight }\n    })\n  }).then((res) => console.log(res))\n}\n\nfunction create_frames(){\n  let rename = src.replace(\".mp4\", \"\")\n  \n  fetch(\"/ffmpeg/\", {\n    method: \"POST\",\n    headers: {\"Content-Type\": \"application/json\"},\n    body: JSON.stringify({\n      action: \"frames\",\n      input: src,\n      output: rename,\n      args: {fps: \"1/8\"}\n    })\n  }).then((res) => console.log(res))\n}\n\nrender(Root, document.body)\n\n",
+      "active": false,
+      "focus": false,
       "start": 0,
       "focused": false,
-      "cursor": 2125
+      "cursor": 1017,
+      "drag_x": 45.2093089789397,
+      "drag_y": 92.17631441129228
     },
     {
       "type": "save-component",
       "id": "n3itp5",
-      "start": 2297,
+      "start": 2778,
       "path": "test/cropper.json",
       "output": "",
       "active": false,
-      "focus": false
+      "focus": false,
+      "drag_x": 773.6410870077374,
+      "drag_y": 416.20667483802816
     },
     {
       "type": "editor_sizer",
       "id": "3s95sh",
-      "start": 2297,
+      "start": 2778,
       "size": "41",
       "output": "",
-      "active": false
+      "active": true,
+      "drag_x": 985.7614214716561,
+      "drag_y": 243.54181503747165,
+      "focus": false
     }
   ],
   "output": ""

@@ -2,22 +2,22 @@
   "blocks": [
     {
       "type": "code",
-      "output": "import {mut} from \"/lib/solid/monke.js\"\n\nconst M = mut({});\ndocument.M = M;\nconst defer = (fn, t = 200) => setTimeout(fn, t)\n\nlet directory = \"/fs/media/scrolls/gaming/\"\n\nasync function get_images(dir){\n return fetch(dir)\n   .then((res) => res.json())\n   .then((res) => res.files) \n}\n\nlet canvas = document.createElement(\"canvas\")\n\nfunction create_canvas(img, file){\n  // document.body.appendChild(img)\n  let ctx\n  setTimeout(() => {\n    let w = img.width\n    let h = img.height\n    console.log(\"w\", w, \"h\", h)\n\n    let canvas = document.createElement(\"canvas\")\n    ctx = canvas.getContext(\"2d\");\n    canvas.width = w\n    canvas.height = h\n\n      document.body.appendChild(canvas)\n    console.log('drawingimage')\n    ctx.drawImage(img, 0, 0)\n    \n  } , 300)\n  \n  let f = \"/ocr\"+directory.replace(\"/fs\", \"\")+file \n  fetch(f).then((res) => res.json())\n    .then((res) =>{\n    setTimeout(() => {\n      res.forEach((box) => {\n        console.log(\"drawing\", box.box)\n        ctx.lineWidth =1 \n        ctx.strokeStyle=\"red\"\n        \n        ctx.beginPath()\n        \n        ctx.moveTo(...box.box[0].map((e) => e - 5))\n        ctx.lineTo(...box.box[1].map((e) => e - 5))\n        ctx.lineTo(...box.box[2].map((e) => e - 5))\n        ctx.lineTo(...box.box[3].map((e) => e - 5))\n        \n        ctx.closePath()\n        ctx.stroke()\n        \n      })\n    }, 400)\n    })\n}\n\n\n",
-      "active": false,
+      "output": "import {mut} from \"/lib/solid/monke.js\"\n\nconst M = mut({});\ndocument.M = M;\nconst defer = (fn, t = 200) => setTimeout(fn, t)\n\nlet directory = \"/fs/media/scrolls/gaming/\"\n\nasync function get_images(dir){\n return fetch(dir)\n   .then((res) => res.json())\n   .then((res) => res.files) \n}\n\nlet canvas = document.createElement(\"canvas\")\n\nfunction create_canvas(img, res){\n  // document.body.appendChild(img)\n  let ctx\n  setTimeout(() => {\n    let w = img.width\n    let h = img.height\n    console.log(\"w\", w, \"h\", h)\n\n    let canvas = document.createElement(\"canvas\")\n    ctx = canvas.getContext(\"2d\");\n    canvas.width = w\n    canvas.height = h\n\n    document.body.appendChild(canvas)\n    console.log('drawingimage')\n    ctx.drawImage(img, 0, 0)\n    \n    const draw_box = box => {\n      ctx.lineWidth =1 \n      ctx.strokeStyle=\"red\"\n      ctx.beginPath()\n      ctx.moveTo(...box.box[0].map((e) => e - 5))\n      ctx.lineTo(...box.box[1].map((e) => e - 5))\n      ctx.lineTo(...box.box[2].map((e) => e - 5))\n      ctx.lineTo(...box.box[3].map((e) => e - 5))\n      ctx.closePath()\n      ctx.stroke()\n    }\n    \n    res.forEach(draw_box)\n    \n  } , 200)\n}\n\n\n\n",
+      "active": true,
       "start": 0,
       "focused": false,
-      "cursor": 662,
-      "focus": false,
-      "drag_x": 2821.180897389614,
-      "drag_y": 1157.6669864581936
+      "cursor": 1140,
+      "focus": true,
+      "drag_x": 280.69075683196417,
+      "drag_y": 664.8811469144403
     },
     {
       "type": "load-component",
       "id": "1yssq",
-      "start": 1363,
+      "start": 1147,
       "path": "",
       "output": "",
-      "active": true,
+      "active": false,
       "focus": false,
       "drag_x": 801.9234037785642,
       "drag_y": 142.36853658435382
@@ -25,7 +25,7 @@
     {
       "type": "save-component",
       "id": "ynttt",
-      "start": 1363,
+      "start": 1147,
       "path": "test/ocr_viewer.json",
       "output": "",
       "active": false,
@@ -36,24 +36,24 @@
     {
       "type": "code",
       "id": "ug1tl",
-      "start": 1363,
-      "drag_x": 2079.1684255200644,
-      "drag_y": 1583.5004796872906,
+      "start": 1147,
+      "drag_x": 909.5496029995293,
+      "drag_y": 663.6900712080056,
       "focused": false,
-      "output": "let index = 25 \n",
-      "cursor": 13,
+      "output": "let index = 5 \n\n/**\n@param {string} path \n@param {string} data \n*/\nasync function write_file(path, data){\n      console.log(\"writing file\", path)\n  const body = {\n      content: data,\n  };\n\n  return await fetch(\"/fs/\" + path, {\n      headers: { \"Content-Type\": \"application/json\" },\n      method: \"PUT\",\n      body: JSON.stringify(body),\n  });\n}\n\n\n/**\n@param {string} path \n@param {string} data \n@returns {Promise<Object>}\n*/\nasync function write_ocr(path){\n  let f = \"/ocr/\"+path.replace(\"/fs/\", \"\") \n  return await fetch(f).then((res) => res.json())\n    .then(async (res) =>{\n      console.log(\"got ocr\")\n      if (res){\n        let str_arr = f.replace(\"/ocr/\", \"\").split(\".\")\n        let extension = str_arr.pop()\n        str_arr.push(\"json\")\n        let final_path = str_arr.join(\".\")\n        let ret = await write_file(final_path, JSON.stringify(res, null, 2))\n        return res\n      }\n    })\n}\n\n",
+      "cursor": 253,
       "active": false,
       "focus": false
     },
     {
       "type": "code",
       "id": "d70m4n",
-      "start": 1379,
-      "drag_x": 2718.226401117832,
-      "drag_y": 806.8418192087078,
+      "start": 2050,
+      "drag_x": 1543.2167962694616,
+      "drag_y": 665.9587787510246,
       "focused": false,
-      "output": "get_images(directory).then((files) => {\n  files.forEach((file, i) => {\n    if (i!=index) return\n    \n    let img = document.createElement(\"img\")\n    img.src = directory+file\n    create_canvas(img, file)\n  })\n})\n\n",
-      "cursor": 55,
+      "output": "get_images(directory).then(async (files) => {\n  for await (const file of files) {\n    // if file extension not jpg return\n    if (file.split(\".\").pop() != \"jpg\") continue\n    \n    console.log('file', file)\n    let path = directory+file\n    let img = document.createElement(\"img\")\n    img.src = path\n    document.body.innerHTML= \"\"\n    \n    let res = await write_ocr(path)\n    \n    create_canvas(img, res)\n    console.log('wrote _file', path)\n  }\n  \n})\n\n\n\n",
+      "cursor": 169,
       "active": false,
       "focus": false
     }
