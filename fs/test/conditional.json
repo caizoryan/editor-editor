@@ -1,0 +1,63 @@
+{
+  "blocks": [
+    {
+      "type": "load-component",
+      "id": "bdmvec",
+      "start": 0,
+      "drag_x": 98.5733756374176,
+      "drag_y": 10.72569500730626,
+      "path": "",
+      "output": "",
+      "active": false,
+      "focus": false
+    },
+    {
+      "type": "save-component",
+      "id": "ue8hsn",
+      "start": 0,
+      "drag_x": 101.77447050779125,
+      "drag_y": 76.3891884514817,
+      "path": "test/conditional.json",
+      "output": "",
+      "active": false,
+      "focus": false
+    },
+    {
+      "id": "tingipungi",
+      "type": "code",
+      "output": "import {mut, mounted, render, html} from \"/lib/solid/monke.js\"\nimport html2canvas from \"/lib/html2canvas.js\"\n\nconst list = (list) => { let last = list.pop(); return list.join(\", \") + \"and \" + last }\nconst entries = (object) =>  Object.entries(object)\nconst name = (object) => object.constructor.name\n\nconst Process = {}\nProcess.is = \"the product\"\nProcess.produces = \"formations rather than form\"\nProcess.stems = `\n  from subjective intentions\n  while showing an appearance of objectivity`\n\nProcess.aspects = [ \"time\",  \"relationship\", \"change\",\n                    \"labour\",\n                    \"tool\", \n                  ]\n\nProcess.patterns = [\"unexpected, correlative, emergent\"]\nProcess.should = `search for ${list(Process.patterns)} patters`\n\nconst paragraph = (title, object) =>  \n  entries(object).map(([key, value]) =>  \n    is_sentence(value) \n    ? sentence(title, key, value) \n    : null )\n\n\nconst is_sentence = (something) => typeof something == \"string\"\nconst sentence = (...elements) => () => html`p -- ${elements.join(\" \")}`\n\n\nlet c = paragraph(\"Process\", Process)\n\n\n\n\n\n",
+      "start": 0,
+      "drag_x": 1050.3348679303351,
+      "drag_y": 757.5547388819384,
+      "focused": false,
+      "cursor": 0,
+      "active": false,
+      "focus": false
+    },
+    {
+      "type": "code",
+      "id": "s5juo9",
+      "start": 1084,
+      "drag_x": 1691.7474714711811,
+      "drag_y": 756.8376275377644,
+      "focused": false,
+      "output": "let SCALE = 3\nlet DISPLAY_SCALE = 4\n\nlet style_sheet = `\n  .page {\n    position: fixed;\n    \n    font-family: hermit;\n    background: beige;\n    \n    width: ${8.5 * SCALE}in;\n    height: ${11 * SCALE}in;\n    transform: scale(${1/DISPLAY_SCALE}) translateY(${-11*DISPLAY_SCALE}in) translateX(${-8.5*DISPLAY_SCALE}in); \n  }\n\n\n  h4 {\n    font-size: ${18*SCALE}pt;\n    padding: ${25*SCALE}px;\n    padding-bottom: 0px;\n    margin : 0;\n  }\n  \n  p {\n    font-size: ${9*SCALE}pt;\n    margin: 0;\n    padding: ${8*SCALE}px ${35*SCALE}px;\n    max-width: ${388*SCALE}pt;\n    \n  }\n`\n\n\n\n\n",
+      "cursor": 138,
+      "active": false,
+      "focus": false
+    },
+    {
+      "type": "code",
+      "id": "hpmb5t",
+      "start": 1658,
+      "drag_x": 1803.199726059618,
+      "drag_y": 1678.8833506618284,
+      "focused": false,
+      "output": "const Root = () => {\n  let style = `\n  canvas {\n    position: fixed;\n    left: 50px;\n    top: 50px;\n  }\n\n  ${style_sheet}\n  `\n\n  mounted(() =>{\n    html2canvas(document.querySelector(\".page\"))\n      .then(canvas => document.body.appendChild(canvas))\n      .then(() => \n        document.querySelector(\".page\").\n        style.display = \"none\")\n  })\n\n  \n  return html`\n  style -- ${style}\n  .page -- ${c}\n  `\n}\n\nrender(Root,document.body)\n\n\n\n\n\n\n\n",
+      "cursor": 0,
+      "active": true,
+      "focus": true
+    }
+  ],
+  "output": ""
+}

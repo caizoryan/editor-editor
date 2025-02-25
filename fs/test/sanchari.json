@@ -1,0 +1,28 @@
+{
+  "blocks": [
+    {
+      "id": "tingipungi",
+      "type": "code",
+      "output": "import ml5 from \"https://esm.sh/ml5\"\nimport { p5 } from \"/lib/p5/p5.js\"\n\n\nconst s = ( p ) => {\n  \n  let x = 100;\n  let y = 100;\n  let bodyPose, video, connections, poses\n  let image\n  let count = 0\n  \n  let calibrating = true\n  let left_points = []\n  let right_points = []\n  let calibrate_count = 0\n\n  p.preload = () => {\n    bodyPose = ml5.bodyPose();\n    image = p.loadImage(\"/fs/media/midway.png\")\n  }\n\n  const gotPoses = (results) => {\n    //if (count > 100)  { p.noLoop(); return }\n    poses = results\n    //count++\n  }\n\n  p.setup = () => {\n    p.createCanvas(window.innerWidth, window.innerHeight);\n\n  // Create the video and hide it\n    video = p.createCapture(p.VIDEO);\n    video.size(window.innerWidth, window.innerHeight);\n    video.hide();\n\n    // Start detecting poses in the webcam video\n    bodyPose.detectStart(video, gotPoses);\n    // Get the skeleton connection information\n    connections = bodyPose.getSkeleton();\n  };\n\n  function draw_midway(){\n    p.blendMode(p.MULTIPLY)\n    p.image(image, 0,0)\n    p.blendMode(p.BLEND)\n  }\n\n  function draw_wrists(right_wrist, left_wrist){\n    let lx = left_wrist.x\n    let ly = left_wrist.y\n    \n    let rx = right_wrist.x\n    let ry = right_wrist.y\n\n    p.ellipse(lx, ly, 10)\n    p.line(lx, ly, rx, ry)\n    p.ellipse(rx, ry, 10)\n  }\n  \n  function calibrate_wrists(right_wrist, left_wrist){\n    let lx = left_wrist.x\n    let ly = left_wrist.y\n    \n    let rx = right_wrist.x\n    let ry = right_wrist.y\n\n    left_points.push({x: lx, y: ly})\n    right_points.push({x: rx, y: ry})\n    console.log(\"pushed\", left_points)\n  }\n\n  function draw_calibrated(){\n    left_points.forEach(point => {\n      p.ellipse(point.x, point.y, 10)\n    })\n    \n    right_points.forEach(point => {\n      p.ellipse(point.x, point.y, 10)\n    })\n\n    // draw the average\n    let left_len = left_points.length\n    let left_total_x = 0\n    let left_total_y = 0\n    \n    left_points.forEach((point) => {\n      left_total_x += point.x\n      left_total_y += point.y\n    })\n\n    let left_average = {\n      x: left_total_x/left_len,\n      y: left_total_y/left_len\n    }\n  \n    let right_len = right_points.length\n    let right_total_x = 0\n    let right_total_y = 0\n    \n    right_points.forEach((point) => {\n      right_total_x += point.x\n      right_total_y += point.y\n    })\n\n    let right_average = {\n      x: right_total_x/right_len,\n      y: right_total_y/right_len\n    }\n\n    p.fill(255,255,0,127)\n    p.ellipse(left_average.x, left_average.y, 50)\n    p.ellipse(right_average.x, right_average.y, 50)\n}\n\n  //-----------------\n  // DRAW\n  //-----------------\n  p.draw = () => {\n    p.background(0);\n    p.image(video, 0,0)\n    \n    if (calibrating && poses){\n      console.log(\"calibraing\")\n      calibrate_count++\n      if (calibrate_count>100) calibrating = false\n\n      \n      // calibrating stuff\n      poses.forEach(pose =>\n        calibrate_wrists(pose.left_wrist, pose.right_wrist ))\n    }\n      \n    else{\n      draw_calibrated()\n      // if(poses) {\n      //   poses.forEach(pose =>\n      //     check_midway(pose.left_wrist, pose.right_wrist ))\n      // }\n    }\n    \n  };\n};\n\nlet myp5 = new p5(s);\n\n",
+      "active": true,
+      "focus": true,
+      "start": 0,
+      "drag_x": 636,
+      "drag_y": 246,
+      "focused": false,
+      "cursor": 3134
+    },
+    {
+      "type": "save-component",
+      "id": "jc80qa",
+      "start": 3135,
+      "drag_x": 21.64694701861941,
+      "drag_y": 74.24799475166938,
+      "path": "test/sanchari.json",
+      "output": "",
+      "active": false,
+      "focus": false
+    }
+  ],
+  "output": ""
+}
