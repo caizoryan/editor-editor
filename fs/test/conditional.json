@@ -55,8 +55,8 @@
       "focused": false,
       "output": "const Root = () => {\n  let style = `\n  canvas {\n    position: fixed;\n    left: 50px;\n    top: 50px;\n  }\n\n  ${style_sheet}\n  `\n\n  mounted(() =>{\n    html2canvas(document.querySelector(\".page\"))\n      .then(canvas => document.body.appendChild(canvas))\n      .then(() => \n        document.querySelector(\".page\").\n        style.display = \"none\")\n  })\n\n  \n  return html`\n  style -- ${style}\n  .page -- ${c}\n  `\n}\n\nrender(Root,document.body)\n\n\n\n\n\n\n\n",
       "cursor": 0,
-      "active": true,
-      "focus": true
+      "active": false,
+      "focus": false
     }
   ],
   "output": ""
