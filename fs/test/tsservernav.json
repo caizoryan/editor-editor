@@ -1,0 +1,28 @@
+{
+  "blocks": [
+    {
+      "id": "tingipungi",
+      "type": "code",
+      "output": "function sample_code(any_string) {\n  let a = \"var\"\n  let b = \"var\"\n\n  return (a + b)\n}\n\nfunction another() {\n  return \"hello\"\n}\n\nclass SomeClass{\n  constructor(){}\n  bing () {\n    return \"whoo\"\n  }\n}\n\n\n",
+      "active": false,
+      "focus": false,
+      "start": 0,
+      "drag_x": 40.77980249229073,
+      "drag_y": 7.265654144365186,
+      "focused": false,
+      "cursor": 0
+    },
+    {
+      "type": "save-component",
+      "id": "ntiecf",
+      "start": 202,
+      "drag_x": 2.9514430000938785,
+      "drag_y": 67.81173689933125,
+      "path": "",
+      "output": "",
+      "active": true,
+      "focus": true
+    }
+  ],
+  "output": ""
+}

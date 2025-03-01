@@ -30,7 +30,7 @@
       "path": "test/fileviewer.json",
       "output": "",
       "active": true,
-      "focus": true,
+      "focus": false,
       "drag_x": 1143.9399988794771,
       "drag_y": 215.15585311697373
     },

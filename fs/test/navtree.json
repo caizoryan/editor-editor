@@ -1,0 +1,76 @@
+{
+  "blocks": [
+    {
+      "type": "save-component",
+      "id": "ntiecf",
+      "start": 0,
+      "drag_x": 2.9514430000938785,
+      "drag_y": 67.81173689933125,
+      "path": "test/navtree.json",
+      "output": "",
+      "active": false,
+      "focus": false
+    },
+    {
+      "id": "tingipungi",
+      "type": "code",
+      "output": "import {render, html, sig, mem, eff_on} from \"/lib/solid/monke.js\"\n\nfunction sample_code(any_string) {\n  let a = \"var\"\n  let b = \"var\"\n\n  return (a + b)\n}\n\nfunction another() {\n  return \"hello\"\n}\n\nclass SomeClass{\n  constructor(){}\n  bing () {\n    return \"whoo\"\n  }\n}\n\n\n\n\n\n\n// fetch nav tree\n\nasync function get_navtree(){\n  return await fetch(\"/ts/getNavigationTree\")\n    .then((res) => res.json())\n}\n\n\n\n",
+      "active": false,
+      "focus": false,
+      "start": 0,
+      "drag_x": 758.5615460005635,
+      "drag_y": 318.43690946966694,
+      "focused": false,
+      "cursor": 0
+    },
+    {
+      "type": "code",
+      "id": "40rkwn",
+      "start": 405,
+      "drag_x": 1416.0737505338664,
+      "drag_y": 312.2783851495045,
+      "focused": false,
+      "output": "\nlet style = `\n*{\n  font-family: monospace;\n}\n\n.tree {\n  padding: 1em;\n  height: 500px;\n  width: 500px;\n  margin: 0 auto;\n}\n\n.item-container {\n  padding: 0 .5em;\n  /* border: 1px solid black; */\n\n}\n\n.item-text {\n\n}\n\n.json .key {\n  display: inline-block;\n}\n\n.arrow {\n  cursor: pointer;\n  color: blue;\n  padding: .25em;\n  background: #00000022;\n}\n\n.json-root{\n  height: 500px;\n  width: 500px;\n  margin: 0 auto;\n}\n\n\n\n.json {\npadding: 0 1em;\nborder-left: 1px #00000033 solid;\n\n}\n\n.json .string {\n\n}\n\n.json .object {\n\n}\n\n.json .number {\n\n}\n\n.json-array {}\n`\n\n\n\n\n\n",
+      "cursor": 343,
+      "active": true,
+      "focus": false
+    },
+    {
+      "type": "code",
+      "id": "1iocik",
+      "start": 963,
+      "drag_x": 2618.537813647835,
+      "drag_y": 456.36554658804164,
+      "focused": false,
+      "output": "class JsonViewer{\n  constructor(json, name = \"ROOT\"){\n    // check if json is string, if yes parse\n    // else set this.json\n    this.name = name\n    this.json = undefined\n    if(\"string\" == typeof json){\n      this.json = JSON.parse(json)\n    }\n      \n    else {\n      this.json = json\n    }\n    \n  }\n\n  render() {\n    console.log(\"anyuthiong\")\n    console.log(this)\n    \n    function value_R(value){\n      // match typeof value\n      // - string\n      // - number\n      // - boolean\n      // - object\n      // - array\n      // - null\n  \n      if (\"string\" == typeof value) return string_R(value)\n      else if (\"boolean\" == typeof value) return bool_R(value)\n      else if (\"number\" == typeof value) return number_R(value)\n      else if (Array.isArray(value)) return array_R(value)\n        // check for array first\n      else if (\"object\" == typeof value) return object_R(value)\n      \n    }\n\n    function array_R(arr){\n      let open = sig(false)\n      let arrow = mem(() => open() ? \"▾\":\"▸\")\n      let toggle = () => open.set(!open())\n      let show = mem(() => \n        open() ?\n        html` \n        p -- ${arr.map((e, i) => value_pair_R([i + \"\", e]))}\n        p -- ]\n        `\n        : \n        html` \n        span -- ..]\n        `\n\n        \n      )\n      return html`\n       span.arrow [onclick=${toggle}] -- ${arrow}\n       span.array -- [\n\n       span -- ${show}\n       \n      `\n    }\n\n    function value_pair_R(pair){\n     const [key, value] = pair\n      console.log(\"key\", key)\n      console.log(\"value\", value)\n      return html`\n      .json\n        span.key -- ${key} \n        span -- ${\" \"}: \n        span.value -- ${() => value_R(value)}\n      `\n    }\n    \n    function string_R(str) {\n      return html`span.string -- ${str}`\n    }\n    \n    function bool_R(val) {\n      let bool = val ? \"true\": \"false\"\n      return html`span.bool -- ${bool}`\n    }\n    \n    function number_R(num) {\n      if (num === 0) console.log(\"ZEROO\")\n      console.log(\"NUMMM\", num)\n      return html`span.number -- ${num}`\n    }\n    \n    function object_R(obj) {\n      // should hold a \n      // closed or open\n      \n      return html`\n       span.object -- {\n       p -- ${Object.entries(obj).map(value_pair_R)}\n       p -- }\n      `\n    }\n    \n    return value_pair_R([this.name, this.json])\n  }\n\n\n\n}\n\n",
+      "cursor": 994,
+      "active": false,
+      "focus": false
+    },
+    {
+      "type": "code",
+      "id": "zq0k7",
+      "start": 3262,
+      "drag_x": 3709.8317011020686,
+      "drag_y": 477.8446976661296,
+      "focused": false,
+      "output": "const Root = () => {\n  let tree = sig(null)\n  get_navtree().then((res) => tree.set(res.childItems))\n\n  let test_json = {\n    something: \"string\",\n    number: 42,\n    array: [1, { fuck: \"me\", in: [1,2, false] },3,8]\n  }\n  let json = new JsonViewer(test_json, \"test_json\")\n  let renderer = () => json.render()\n  \n  return html`\n    style -- ${style}\n    .json-root -- ${renderer}\n    .tree -- ${mem(() => Items(tree()))}\n  `\n}\n\nconst Items = (items) =>\n  {\n    if (!items) return\n    return html`each of ${items} as ${Item}`\n  }\n\nconst Item = (item) => {\n  if (!item) return\n  return html`\n  .item-container \n    p -- ${item.text}\n    when ${() => item.childItems} then ${() => Items(item.childItems)}\n  `\n}\n\n\n\n\n",
+      "cursor": 425,
+      "active": false,
+      "focus": false
+    },
+    {
+      "type": "code",
+      "id": "d22ovl",
+      "start": 3972,
+      "drag_x": 3423.824551583652,
+      "drag_y": 1370.9109626175841,
+      "focused": false,
+      "output": "render(Root, document.body)\n\ndocument.body.style.background = \"yellow\"\n\n",
+      "cursor": 0,
+      "active": false,
+      "focus": false
+    }
+  ],
+  "output": ""
+}
