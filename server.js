@@ -47,6 +47,8 @@ const CONFIG = {
 let env
 create_env("console.log(null)").then((e) => {
 	env = e
+
+	e.languageService.getNavigationTree
 })
 
 function get_tsserver(req, res) {
