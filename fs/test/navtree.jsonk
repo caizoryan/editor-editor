@@ -1,0 +1,88 @@
+{
+  "blocks": [
+    {
+      "type": "save-component",
+      "id": "ntiecf",
+      "start": 0,
+      "drag_x": 2.9514430000938785,
+      "drag_y": 67.81173689933125,
+      "path": "test/navtree.jsonk",
+      "output": "",
+      "active": false,
+      "focus": false
+    },
+    {
+      "id": "tingipungi",
+      "type": "code",
+      "output": "import {mut,render, html, sig, mem, eff_on} from \"/lib/solid/monke.js\"\n\nlet M = mut({})\ndocument.M = M\n\nfunction sample_code(any_string) {\n  let a = \"var\"\n  let b = \"var\"\n\n  return (a + b)\n}\n\nfunction another() {\n  return \"hello\"\n}\n\nclass SomeClass{\n  constructor(){}\n  bing () {\n    return \"whoo\"\n  }\n  noway(){}\n}\n\n\n\n\n\n\n// fetch nav tree\n\nasync function get_navtree(){\n  return await fetch(\"/ts/getNavigationTree\")\n    .then((res) => res.json())\n}\n\n\n\n\n\n\n\n\n\n",
+      "active": false,
+      "focus": false,
+      "start": 0,
+      "drag_x": 758.5615460005635,
+      "drag_y": 318.43690946966694,
+      "focused": false,
+      "cursor": 170
+    },
+    {
+      "type": "code",
+      "id": "40rkwn",
+      "start": 459,
+      "drag_x": 1416.0737505338664,
+      "drag_y": 312.2783851495045,
+      "focused": false,
+      "output": "\nlet style = `\n*::-webkit-scrollbar {\n  display: none;\n}\n\n*{\n  font-family: monospace;\n  padding: 0;\n  margin: 0;\n\n  -ms-overflow-style: none;  /* IE and Edge */\n  scrollbar-width: none;  /* Firefox */\n}\n\n:root {\n  --base00: #19171c;\n  --base01: #26232a;\n  --base02: #585260;\n  --base03: #655f6d;\n  --base04: #7e7887;\n  --base05: #8b8792;\n  --base06: #e2dfe7;\n  --base07: #efecf4;\n  --base08: #be4678;\n  --base09: #aa573c;\n  --base0A: #a06e3b;\n  --base0B: #2a9292;\n  --base0C: #398bc6;\n  --base0D: #576ddb;\n  --base0E: #955ae7;\n  --base0F: #bf40bf;\n}\n\nbody {\n  background: var(--base01);\n  color: var(--base07);\n}\n\n.tree {\n  padding: 1em;\n  height: calc(100vh-2em);\n  width: 40vw;\n  \n  overflow-y: scroll;\n  display: grid;\n  \n  grid-template-columns: repeat( auto-fit, minmax(450px, 1fr) );\n  grid-template-rows: repeat( auto-fit, 200px );\n  grid-gap: 1em;\n}\n\n.item-container {\n  overflow-y: scroll;\n  height: min-content;\n  box-shadow: 0 0 10px 2px  #00000022;\n  max-height: calc(100%-20px);\n  padding: 10px;\n}\n\n.item-text {\n\n}\n\n.json .key {\n  display: inline-block;\n}\n\n.json .key:hover {\ncursor: crosshair;\nbackground: var(--base06);\ncolor: var(--base00);\n\n}\n\n.arrow {\n  cursor: pointer;\n  color: var(--base0A);\n  padding: .25em;\n  color: var(--base0D);\n}\n\n\n\n.json {\n  padding: 0 1em;\n  border-left: 1px #00000033 solid;\n  height: min-content;\n}\n\n.json .string {\n  color: var(--base08);\n}\n\n.json .object { }\n\n.json .number {\n  color: var(--base09);\n\n}\n\n.json-array {}\n`\n\n\n\n\n\n\n\n\n\n\n\n",
+      "cursor": 675,
+      "active": false,
+      "focus": false
+    },
+    {
+      "type": "code",
+      "id": "1iocik",
+      "start": 1942,
+      "drag_x": 2618.537813647835,
+      "drag_y": 456.36554658804164,
+      "focused": false,
+      "output": "class JsonViewer{\n  constructor(json, name = \"ROOT\"){\n    // check if json is string, if yes parse\n    // else set this.json\n    this.name = name\n    this.json = undefined\n    if(\"string\" == typeof json){\n      this.json = JSON.parse(json)\n    }\n      \n    else {\n      this.json = json\n    }\n    \n  }\n\n  render() {\n    \n    function value_R(value){\n      if (\"string\" == typeof value) return string_R(value)\n      else if (\"boolean\" == typeof value) return bool_R(value)\n      else if (\"number\" == typeof value) return number_R(value)\n      else if (Array.isArray(value)) return array_R(value)\n      else if (\"object\" == typeof value) return object_R(value)\n    }\n\n    function array_R(arr){\n      let open = sig(false)\n      let arrow = mem(() => open() ? \"▾\":\"▸\")\n      let toggle = () => open.set(!open())\n      let show = mem(() =>  open() \n        ? html` \n          p -- ${arr.map((e, i) => value_pair_R([i + \"\", e]))}\n          p -- ]`\n        : html`span -- ..]`\n      )\n      return html`\n       span.arrow [onclick=${toggle}] -- ${arrow}\n       span.array -- [\n       span -- ${show}`\n    }\n\n    function value_pair_R(pair){\n     const [key, value] = pair\n      const click = () => {\n        console.log(key, typeof value)\n        if (key == \"start\"  && \"number\" == typeof value){\n          console.log(M.EDITOR.state)\n          M.EDITOR?.state?.focus_on_pos(value)\n        }\n      }\n      return html`\n      .json\n        span.key [onclick=${click}] -- ${key} \n        span -- ${\" \"}: \n        span.value -- ${() => value_R(value)}\n      `\n    }\n    \n    function string_R(str) {\n      return html`span.string -- \"${str}\"`\n    }\n    \n    function bool_R(val) {\n      let bool = val ? \"true\": \"false\"\n      return html`span.bool -- ${bool}`\n    }\n    \n    function number_R(num) {\n      return html`span.number -- ${num}`\n    }\n    \n    function object_R(obj) {\n      // should hold a \n      // closed or open\n      \n      return html`\n       span -- {\n       p -- ${Object.entries(obj).map(value_pair_R)}\n       span -- }\n      `\n    }\n    \n    return value_pair_R([this.name, this.json])\n  }\n\n}\n\n",
+      "cursor": 856,
+      "active": true,
+      "focus": true
+    },
+    {
+      "type": "code",
+      "id": "zq0k7",
+      "start": 4051,
+      "drag_x": 3709.8317011020686,
+      "drag_y": 477.8446976661296,
+      "focused": false,
+      "output": "const Root = () => {\n  let tree = sig(null)\n  get_navtree().then((res) => tree.set(res.childItems))\n\n  let test_json = {\n    something: \"string\",\n    number: 42,\n    array: [1, { fuck: \"me\", in: [1,2, false] },3,8]\n  }\n  let json = new JsonViewer(test_json, \"test_json\")\n  let renderer = () => json.render()\n\n  setTimeout(() => {\n    console.log(\"M\", M)\n  }, 1000)\n  \n  return html`\n    style -- ${style}\n    .tree -- ${mem(() => Items(tree()))}\n  `\n}\n\n\nconst Items = (items) =>\n  {\n    if (!items) return\n    return html`each of ${items} as ${Item}`\n  }\n\nconst Item = (item) => {\n  if (!item) return\n  \n  let json = new JsonViewer(item, item.text)\n  return  html`\n  .item-container -- ${ json.render() }\n  `\n  return html`\n  .item-container \n    p -- ${item.text}\n    when ${() => item.childItems} then ${() => Items(item.childItems)}\n  `\n}\n\n\n\n\n\n\n\n\n\n\n",
+      "cursor": 607,
+      "active": false,
+      "focus": false
+    },
+    {
+      "type": "code",
+      "id": "d22ovl",
+      "start": 4903,
+      "drag_x": 3423.824551583652,
+      "drag_y": 1370.9109626175841,
+      "focused": false,
+      "output": "render(Root, document.body)\n\n\n\n\n\n\n",
+      "cursor": 0,
+      "active": false,
+      "focus": false
+    },
+    {
+      "type": "code",
+      "id": "bra7t",
+      "start": 4937,
+      "drag_x": 4756.580811147807,
+      "drag_y": 1318.565313470901,
+      "focused": false,
+      "output": "// unknown = \"\",\n//         warning = \"warning\",\n//         /** predefined type (void) or keyword (class) */\n//         keyword = \"keyword\",\n//         /** top level script node */\n//         scriptElement = \"script\",\n//         /** module foo {} */\n//         moduleElement = \"module\",\n//         /** class X {} */\n//         classElement = \"class\",\n//         /** var x = class X {} */\n//         localClassElement = \"local class\",\n//         /** interface Y {} */\n//         interfaceElement = \"interface\",\n//         /** type T = ... */\n//         typeElement = \"type\",\n//         /** enum E */\n//         enumElement = \"enum\",\n//         enumMemberElement = \"enum member\",\n//         /**\n//          * Inside module and script only\n//          * const v = ..\n//          */\n//         variableElement = \"var\",\n//         /** Inside function */\n//         localVariableElement = \"local var\",\n//         /** using foo = ... */\n//         variableUsingElement = \"using\",\n//         /** await using foo = ... */\n//         variableAwaitUsingElement = \"await using\",\n//         /**\n//          * Inside module and script only\n//          * function f() { }\n//          */\n//         functionElement = \"function\",\n//         /** Inside function */\n//         localFunctionElement = \"local function\",\n//         /** class X { [public|private]* foo() {} } */\n//         memberFunctionElement = \"method\",\n//         /** class X { [public|private]* [get|set] foo:number; } */\n//         memberGetAccessorElement = \"getter\",\n//         memberSetAccessorElement = \"setter\",\n//         /**\n//          * class X { [public|private]* foo:number; }\n//          * interface Y { foo:number; }\n//          */\n//         memberVariableElement = \"property\",\n//         /** class X { [public|private]* accessor foo: number; } */\n//         memberAccessorVariableElement = \"accessor\",\n//         /**\n//          * class X { constructor() { } }\n//          * class X { static { } }\n//          */\n//         constructorImplementationElement = \"constructor\",\n//         /** interface Y { ():number; } */\n//         callSignatureElement = \"call\",\n//         /** interface Y { []:number; } */\n//         indexSignatureElement = \"index\",\n//         /** interface Y { new():Y; } */\n//         constructSignatureElement = \"construct\",\n//         /** function foo(*Y*: string) */\n//         parameterElement = \"parameter\",\n//         typeParameterElement = \"type parameter\",\n//         primitiveType = \"primitive type\",\n//         label = \"label\",\n//         alias = \"alias\",\n//         constElement = \"const\",\n//         letElement = \"let\",\n//         directory = \"directory\",\n//         externalModuleName = \"external module name\",\n//         /**\n//          * <JsxTagName attribute1 attribute2={0} />\n//          * @deprecated\n//          */\n//         jsxAttribute = \"JSX attribute\",\n//         /** String literal */\n//         string = \"string\",\n//         /** Jsdoc @link: in `{@link C link text}`, the before and after text \"{@link \" and \"}\" */\n//         link = \"link\",\n//         /** Jsdoc @link: in `{@link C link text}`, the entity name \"C\" */\n//         linkName = \"link name\",\n//         /** Jsdoc @link: in `{@link C link text}`, the link text \"link text\" */\n//         linkText = \"link text\",\n\n\n\n\n\n",
+      "cursor": 0,
+      "active": false,
+      "focus": false
+    }
+  ],
+  "output": ""
+}
