@@ -6,7 +6,7 @@
       "start": 0,
       "path": "",
       "output": "",
-      "active": false,
+      "active": true,
       "focus": false,
       "drag_x": 1289.0682106508261,
       "drag_y": 1667.7271284340552,
@@ -126,7 +126,7 @@
       "focused": false,
       "output": "function p(text, onclick){\n  \n  let style = {\n    \"font-family\": \"monospace\",\n    color: \"green\",\n    width: 'min-content',\n    \"min-width\": '300px',\n    cursor: \"pointer\"\n  }\n\n  \n  return h(\"p\", {style, onclick}, text)()\n}\n\nfunction check_dir(path = \"\", root = \"/fs/\"){\n  fetch(root+path)\n    .then((res) => {\n      console.log(\"got res\")\n      try{ let r = res.json(); if(r) return r; else return null }\n      catch { return null }\n      return null\n    })\n    .then((res) => {\n      console.log(res)\n      if (!res) console.log(\"failed\")\n      if (res.type == \"dir\") show_dir(path, res) \n      else show_file(root+path)\n    })\n}\n\ncheck_dir(\"\")\n\n\n\n",
       "cursor": 649,
-      "active": true,
+      "active": false,
       "focus": false,
       "drag_w": 800,
       "drag_h": 160
