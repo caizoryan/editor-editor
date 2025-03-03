@@ -41,9 +41,18 @@ const addUserLibraries = async (map) => {
 	let root = process.cwd()
 	let full_path = path.join(root, "/lib/")
 	const files = await fs.promises.readdir(full_path, { recursive: true });
+	const is_d_ts = (filename) => {
+		let split = filename.split(".")
+		let ts = split.pop()
+		let d = split.pop()
+
+		return (ts == "ts" && d == "d")
+	}
 	files.forEach((file) => {
 		if (file.includes("node_modules")) return
-		if (file.split(".").pop() == "js") {
+		if (file.split(".").pop() == "js"
+			|| is_d_ts(file)
+		) {
 			addLib(file, map)
 		}
 	})
@@ -63,19 +72,58 @@ const createDefaultMap2015 = async () => {
 	}
 
 	const fsMap = new Map()
-	await addLib("lib.es2015.d.ts", fsMap)
-	await addLib("lib.es2015.collection.d.ts", fsMap)
-	await addLib("lib.es2015.core.d.ts", fsMap)
-	await addLib("lib.es2015.generator.d.ts", fsMap)
-	await addLib("lib.es2015.iterable.d.ts", fsMap)
-	await addLib("lib.es2015.promise.d.ts", fsMap)
-	await addLib("lib.es2015.proxy.d.ts", fsMap)
-	await addLib("lib.es2015.reflect.d.ts", fsMap)
-	await addLib("lib.es2015.symbol.d.ts", fsMap)
-	await addLib("lib.es2015.symbol.wellknown.d.ts", fsMap)
-	await addLib("lib.dom.d.ts", fsMap)
-	await addLib("lib.es5.d.ts", fsMap)
-	await addLib("lib.es6.d.ts", fsMap)
+
+	let libs = [
+		"lib.d.ts",
+		"lib.decorators.d.ts",
+		"lib.decorators.legacy.d.ts",
+		"lib.dom.asynciterable.d.ts",
+		"lib.dom.d.ts",
+		"lib.dom.iterable.d.ts",
+		"lib.es5.d.ts",
+		"lib.es6.d.ts",
+		"lib.es2015.collection.d.ts",
+		"lib.es2015.core.d.ts",
+		"lib.es2015.d.ts",
+		"lib.es2015.generator.d.ts",
+		"lib.es2015.iterable.d.ts",
+		"lib.es2015.promise.d.ts",
+		"lib.es2015.proxy.d.ts",
+		"lib.es2015.reflect.d.ts",
+		"lib.es2015.symbol.d.ts",
+		"lib.es2015.symbol.wellknown.d.ts",
+		"lib.es2016.array.include.d.ts",
+		"lib.es2016.d.ts",
+		"lib.es2016.full.d.ts",
+		"lib.es2016.intl.d.ts",
+		"lib.es2017.arraybuffer.d.ts",
+		"lib.es2017.d.ts",
+		"lib.es2017.date.d.ts",
+		"lib.es2017.full.d.ts",
+		"lib.es2017.intl.d.ts",
+		"lib.es2017.object.d.ts",
+		"lib.es2017.sharedmemory.d.ts",
+		"lib.es2017.string.d.ts",
+		"lib.es2017.typedarrays.d.ts",
+		"lib.es2018.asyncgenerator.d.ts",
+		"lib.es2018.asynciterable.d.ts",
+		"lib.es2018.d.ts",
+		"lib.es2018.full.d.ts",
+		"lib.es2018.intl.d.ts",
+		"lib.es2018.promise.d.ts",
+		"lib.es2018.regexp.d.ts",
+		"lib.es2019.array.d.ts",
+		"lib.es2019.d.ts",
+		"lib.es2019.full.d.ts",
+		"lib.es2019.intl.d.ts",
+		"lib.es2019.object.d.ts",
+		"lib.es2019.string.d.ts",
+		"lib.es2019.symbol.d.ts",
+	]
+
+	for await (const lib of libs) {
+		await addLib(lib, fsMap)
+	}
 
 	return fsMap
 }
@@ -89,7 +137,7 @@ export async function create_env(content) {
 	fsMap.set("index.js", content)
 
 
-	const compilerOpts = { target: ts.ScriptTarget.ES2015, esModuleInterop: true, allowJs: true, checkJs: true }
+	const compilerOpts = { target: ts.ScriptTarget.ES2017, esModuleInterop: true, allowJs: true, checkJs: true }
 	const env = createVirtualTypeScriptEnvironment(system, ["index.js"], ts, compilerOpts)
 	return env
 }
