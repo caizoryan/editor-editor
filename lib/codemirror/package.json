@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -16,9 +17,14 @@
     "@codemirror/view": "^6.29.1",
     "@lezer/highlight": "^1.2.0",
     "@replit/codemirror-vim": "^6.2.1",
-    "@rollup/plugin-node-resolve": "^15.2.3",
     "codemirror": "^6.0.1",
     "eslint4b-prebuilt": "^6.7.2",
-    "rollup": "^4.20.0"
+    "rollup": "^4.20.0",
+    "rollup-plugin-dts": "^6.1.1"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^16.0.0",
+    "@rollup/plugin-typescript": "^12.1.2",
+    "tslib": "^2.8.1"
   }
 }
