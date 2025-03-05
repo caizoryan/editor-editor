@@ -228,6 +228,32 @@ const get_exists_base = (root) => (req, res) => {
 	res.json(result);
 };
 
+const get_path_transformed_js = (req, res) => {
+	console.log("path ->", req.path)
+	const options = { root: path.join(process.cwd()) };
+	const file_path = req.path.replace("/js/", "/fs/");
+	console.log("file_path ->", file_path);
+	if (!has_extension(file_path)) res.status(404).send("Invalid File, dir not allowed")
+
+	let file = get_file(file_path)
+	if (file?.type == "file") {
+		if (file.path.split(".").pop() == "json") {
+			let str = fs.readFileSync(path.join(options.root, file.path), { encoding: "utf8" })
+			let json = JSON.parse(str)
+			let out
+			if (json.blocks && json.blocks.length > 0) out = json.blocks.map((e) => e.output).join("")
+			if (out) {
+				console.log("sending", file_path)
+				res.set('Content-Type', 'text/javascript');
+				res.send(Buffer.from(out));
+			}
+
+		}
+	}
+
+	if (!file) return res.status(404).send("File not found");
+}
+
 const get_path_transformed = (req, res) => {
 	console.log("path ->", req.path)
 	const options = { root: path.join(process.cwd()) };
@@ -315,6 +341,7 @@ app.get("/", (req, res) => {
 app.get("/exists/*", get_exists);
 app.get("/fs/*", get_path);
 app.get("/fs-run/*", get_path_transformed);
+app.get("/js/*", get_path_transformed_js);
 // app.get("/f", get_dirs);
 app.get("/lib/*", get_library);
 

@@ -220,7 +220,6 @@ function measureCursor(cm: CodeMirror, view: EditorView, cursor: SelectionRange,
       letter += view.state.sliceDoc(head + 1, head + 2);
     }
     let h = (pos.bottom - pos.top);
-    console.log(view.scaleX)
     return new Piece(left - base.left, pos.top - base.top + h * (1 - hCoeff), h * hCoeff, style.fontFamily, parseFloat(style.fontSize) * view.scaleX + "px", style.fontWeight, style.color, primary ? "cm-fat-cursor cm-cursor-primary" : "cm-fat-cursor cm-cursor-secondary", letter, hCoeff != 1)
   } else {
     return null;
