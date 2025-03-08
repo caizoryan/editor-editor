@@ -133,6 +133,7 @@ function overwrite_path(req, res) {
 	const content = body.content;
 
 	console.log("overwriting", file_path);
+	console.log("content", content);
 
 	if (!body) return res.status(400).send("No body provided");
 
@@ -333,7 +334,7 @@ function has_extension(str) {
 const app = express();
 
 app.use(cors());
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '50mb' }));
 
 app.get("/", (req, res) => {
 	res.sendFile("index.html", { root: path.join(process.cwd()) });
