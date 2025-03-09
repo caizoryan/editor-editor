@@ -8,8 +8,8 @@
       "drag_y": 36.493150684931535,
       "path": "snippet/JsonViewer.json",
       "output": "",
-      "active": false,
-      "focus": false,
+      "active": true,
+      "focus": true,
       "drag_w": 600,
       "drag_h": 60,
       "autosave": true
@@ -31,8 +31,8 @@
     {
       "type": "sandbox",
       "id": "fptu49",
-      "active": true,
-      "focus": true,
+      "active": false,
+      "focus": false,
       "start": 3238,
       "drag_x": 1058.5615460005633,
       "drag_y": 1198.436909469667,
