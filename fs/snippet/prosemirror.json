@@ -1,0 +1,132 @@
+{
+  "blocks": [
+    {
+      "type": "save-component",
+      "id": "ntiecf",
+      "start": 0,
+      "drag_x": 56.42465753424656,
+      "drag_y": 36.493150684931535,
+      "path": "snippet/prosemirror.json",
+      "output": "",
+      "active": true,
+      "focus": true,
+      "drag_w": 600,
+      "drag_h": 60,
+      "autosave": true
+    },
+    {
+      "id": "tingipungi",
+      "type": "code",
+      "output": "import {mut,render, html, sig, mem, eff_on} from \"/lib/solid/monke.js\"\n\nclass JsonViewer {\n  constructor(json, name = \"ROOT\"){\n    // check if json is string, if yes parse\n    // else set this.json\n    this.name = name\n    this.json = undefined\n    if(\"string\" == typeof json){\n      this.json = JSON.parse(json)\n    }\n      \n    else {\n      this.json = json\n    }\n    \n  }\n\n  render() {\n    \n    function value_R(value){\n      // match typeof value\n      // - string\n      // - number\n      // - boolean\n      // - object\n      // - array\n      // - null\n  \n      if (\"string\" == typeof value) return string_R(value)\n      else if (\"boolean\" == typeof value) return bool_R(value)\n      else if (\"number\" == typeof value) return number_R(value)\n      else if (value == null) return null_R(value)\n      else if (Array.isArray(value)) return array_R(value)\n      else if (\"object\" == typeof value) return object_R(value)\n      \n    }\n\n    function array_R(arr){\n      let open = sig(false)\n      let arrow = mem(() => open() ? \"▾\":\"▸\")\n      let toggle = () => open.set(!open())\n      let show = mem(() => \n        open() ?\n        html` \n        p -- ${arr.map((e, i) => value_pair_R([i + \"\", e]))}\n        p -- ]\n        `\n        : \n        html` \n        span -- ..]\n        `\n\n        \n      )\n      return html`\n       span.arrow [style=cursor:pointer; onclick=${toggle}] -- ${arrow}\n       span.array -- [\n\n       span -- ${show}\n       \n      `\n    }\n\n    function value_pair_R(pair){\n     const [key, value] = pair\n      const click = () => {\n        console.log(key, typeof value)\n        if (key == \"start\"  && \"number\" == typeof value){\n          console.log(M.EDITOR.state)\n          M.EDITOR?.state?.focus_on_pos(value)\n        }\n      }\n\n      const json_style = ` \n        padding: 0 1em;\n        border-left: 1px #00000033 solid;\n        height: min-content; `      \n      \n      return html`\n      .json [style=${json_style}]\n        span.key [onclick=${click}] -- ${key} \n        span -- ${\" \"}: \n        span.value -- ${() => value_R(value)}\n      `\n    }\n    \n    function string_R(str) {\n      const string_css = `color: #be4678;`\n      \n      return html`span.string [style=${string_css}] -- \"${str}\"`\n    }\n    \n    function null_R(str) {\n      const css = `color: red;`\n      return html`span.null [style=${css}] -- \"null\"`\n    }\n    \n    function bool_R(val) {\n      let bool = val ? \"true\": \"false\"\n      return html`span.bool -- ${bool}`\n    }\n    \n    function number_R(num) {\n      return html`span.number -- ${num}`\n    }\n    \n    function object_R(obj) {\n      // should hold a \n      // closed or open\n\n      let open = sig(false)\n      let arrow = mem(() => open() ? \"▾\":\"▸\")\n      let toggle = () => open.set(!open())\n      let show = mem(() => \n        open() ?\n        html` \n        p -- ${Object.entries(obj).map(value_pair_R)}\n        p -- {\n        `\n        : \n        html` \n        span -- ..}\n        `\n\n        \n      )\n      return html`\n       span.arrow [ onclick=${toggle} style=cursor:pointer ] -- ${arrow}\n       span -- {\n\n       span -- ${show}\n       \n      `\n    }\n    \n    return value_pair_R([this.name, this.json])\n  }\n  css() {\n    return style()\n  }\n}\n\nexport {JsonViewer}\n\n\n\n\n\n\n\n",
+      "active": false,
+      "focus": false,
+      "start": 0,
+      "drag_x": 758.5615460005635,
+      "drag_y": 318.43690946966694,
+      "focused": false,
+      "cursor": 96,
+      "drag_w": 550,
+      "drag_h": 820
+    },
+    {
+      "type": "sandbox",
+      "id": "fptu49",
+      "active": false,
+      "focus": false,
+      "start": 3240,
+      "drag_x": 1058.5615460005633,
+      "drag_y": 1198.436909469667,
+      "drag_w": 600,
+      "drag_h": 1200,
+      "output": "",
+      "focused": false,
+      "renderer": "function (state) {\n  // // ----------------------------------\n  // // Are.na channel saver\n  // // ----------------------------------\n    \n  // // this one will be to load are.na data into a folder in fs\n  // // /fs/arena-data/blog-feed.json\n  \n  // // TODO: Make a jsdoc are.na library\n  // // with utils like hack-refresh, get >100 per, \n\n  // const ARENA_HOST = \"http://localhost:3000/api/\"\n  // const SLUG = \"blog-feed\"\n  let render = sig(() => h(\"p\", \"...loading\"))\n  // let css = sig(\"\")\n  // const render_json = (json) => {\n  //   import(\"/js/snippet/JsonViewer.json\")\n  //     .then((j) => {\n        \n  //       let jj = new j.JsonViewer(json)\n  //       render.set(jj.render.bind(jj))\n  //       css.set(jj.css())\n  //     })\n\n  //   return render\n  // }\n  // const get_channel = (slug) => {\n  //   fetch(ARENA_HOST+\"channels/\"+slug)\n  //     .then((res) => res.json())\n  //     .then((res) => {\n  //       let b = {content: JSON.stringify(res)}\n        \n  //       fetch(\"/fs/arena-data/blog-feed.json\", {\n  //         headers: { \"Content-Type\": \"application/json\" },\n  //         method: \"PUT\",\n  //         body: JSON.stringify(b),\n          \n  //       });\n        \n  //       render_json(res)\n  //     })\n  // }\n\n  // get_channel(SLUG)\n  \n\n  let style = mem(() => `\n    background: white;\n  `)\n  \n  \n  return h(\"div\", {style: style},render)  \n}",
+      "cursor": 0
+    },
+    {
+      "type": "code",
+      "id": "40rkwn",
+      "start": 3240,
+      "drag_x": 1416.0737505338664,
+      "drag_y": 312.2783851495045,
+      "focused": false,
+      "output": "let color = sig(\"#26232a\")\n\nlet style = mem(() => `\n*::-webkit-scrollbar {\n  display: none;\n}\n\n*{\n  font-family: monospace;\n  padding: 0;\n  margin: 0;\n  -ms-overflow-style: none;  /* IE and Edge */\n  scrollbar-width: none;  /* Firefox */\n}\n\n:root {\n  --base00: #26232a;\n  --base01: #26232a;\n  --base02: #585260;\n  --base03: #655f6d;\n  --base04: #7e7887;\n  --base05: #8b8792;\n  --base06: #e2dfe7;\n  --base07: #efecf4;\n  --base08: #be4678;\n  --base09: #aa573c;\n  --base0A: #a06e3b;\n  --base0B: #2a9292;\n  --base0C: #398bc6;\n  --base0D: #576ddb;\n  --base0E: #955ae7;\n  --base0F: #bf40bf;\n}\n\nbody {\n  background: var(--base01);\n  color: var(--base07);\n}\n\n.tree {\n  padding: 1em;\n  height: calc(100vh-2em);\n  width: calc(100vw-2em);\n  \n  overflow-y: scroll;\n  display: grid;\n  \n  grid-template-columns: repeat( auto-fit, minmax(450px, 1fr) );\n  grid-template-rows: repeat( auto-fit, 200px );\n  grid-gap: 1em;\n}\n\n.item-container {\n  overflow-y: scroll;\n  height: min-content;\n  box-shadow: 0 0 10px 2px  #00000022;\n  max-height: calc(100%-20px);\n  padding: 10px;\n}\n\n.json .key {\n  display: inline-block;\n}\n\n.json .key:hover {\ncursor: crosshair;\nbackground: var(--base06);\ncolor: var(--base00);\n}\n\n.arrow {\n  cursor: pointer;\n  color: var(--base0A);\n  padding: .25em;\n  color: var(--base0D);\n}\n\n.json {\n  padding: 0 1em;\n  border-left: 1px #00000033 solid;\n  height: min-content;\n}\n\n.json .string {\n  color: var(--base08);\n}\n\n.json .object { }\n\n.json .number {\n  color: var(--base09);\n\n}\n\n.json-array {}\n`)\n\n\n\n\n\n\n\n",
+      "cursor": 0,
+      "active": false,
+      "focus": false,
+      "drag_w": 600,
+      "drag_h": 830
+    },
+    {
+      "type": "code",
+      "id": "1iocik",
+      "start": 4747,
+      "drag_x": 2618.537813647835,
+      "drag_y": 456.36554658804164,
+      "focused": false,
+      "output": "\n\n\n\n\n\n\n",
+      "cursor": 0,
+      "active": false,
+      "focus": false,
+      "drag_w": 600,
+      "drag_h": 1200
+    },
+    {
+      "type": "code",
+      "id": "zq0k7",
+      "start": 4754,
+      "drag_x": 3709.8317011020686,
+      "drag_y": 477.8446976661296,
+      "focused": false,
+      "output": "const Root = () => {\n  let tree = sig(null)\n  get_navtree().then((res) => tree.set(res.childItems))\n\n  let test_json = {\n    something: \"string\",\n    number: 42,\n    array: [1, { fuck: \"me\", in: [1,2, false] },3,8]\n  }\n  let json = new JsonViewer(test_json, \"test_json\")\n  let renderer = () => json.render()\n\n  setTimeout(() => {\n    console.log(\"M\", M)\n  }, 1000)\n  \n  return html`\n    style -- ${style}\n    .tree -- ${mem(() => Items(tree()))}\n  `\n}\n\n\nconst Items = (items) =>\n  {\n    if (!items) return\n    return html`each of ${items} as ${Item}`\n  }\n\nconst Item = (item) => {\n  if (!item) return\n  \n  let json = new JsonViewer(item, item.text)\n  return  html`\n  .item-container -- ${ json.render() }\n  `\n  return html`\n  .item-container \n    p -- ${item.text}\n    when ${() => item.childItems} then ${() => Items(item.childItems)}\n  `\n}\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+      "cursor": 0,
+      "active": false,
+      "focus": false,
+      "drag_w": 600,
+      "drag_h": 1200
+    },
+    {
+      "type": "code",
+      "id": "d22ovl",
+      "start": 5614,
+      "drag_x": 4747.357775971194,
+      "drag_y": 1200.244157939201,
+      "focused": false,
+      "output": "\n\n\n\n\n\n\n\n",
+      "cursor": 0,
+      "active": false,
+      "focus": false,
+      "drag_w": 600,
+      "drag_h": 60
+    },
+    {
+      "type": "code",
+      "id": "bra7t",
+      "start": 5622,
+      "drag_x": 4756.580811147807,
+      "drag_y": 1318.565313470901,
+      "focused": false,
+      "output": "\n\n\n\n\n\n\n",
+      "cursor": 0,
+      "active": false,
+      "focus": false,
+      "drag_w": 600,
+      "drag_h": 1200
+    }
+  ],
+  "output": "",
+  "properties": {
+    "panzoom": {
+      "initialX": -657.8944090877046,
+      "initialY": -218.1690209109142,
+      "initialZoom": 1
+    },
+    "buffer": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+    ]
+  }
+}

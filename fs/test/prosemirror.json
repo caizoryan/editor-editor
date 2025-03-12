@@ -1,0 +1,132 @@
+{
+  "blocks": [
+    {
+      "type": "save-component",
+      "id": "ntiecf",
+      "start": 0,
+      "drag_x": 56.42465753424656,
+      "drag_y": 36.493150684931535,
+      "path": "test/prosemirror.json",
+      "output": "",
+      "active": false,
+      "focus": false,
+      "drag_w": 600,
+      "drag_h": 60,
+      "autosave": true
+    },
+    {
+      "id": "tingipungi",
+      "type": "code",
+      "output": "import {mounted,mut,render, html, sig, mem, eff_on} from \"/lib/solid/monke.js\"\nimport {model, view, state, schema, schemaList, exampleSetup } from \"/lib/prosemirror/dist/main.js\"\n\n\nlet mySchema = new model.Schema({\n  nodes: schemaList.addListNodes(schema.schema.spec.nodes, \"paragraph block*\", \"block\"),\n  marks: schema.schema.spec.marks\n})\n\n\n\n\n\n\n",
+      "active": false,
+      "focus": false,
+      "start": 0,
+      "drag_x": 758.5615460005635,
+      "drag_y": 318.43690946966694,
+      "focused": false,
+      "cursor": 345,
+      "drag_w": 550,
+      "drag_h": 820
+    },
+    {
+      "type": "sandbox",
+      "id": "fptu49",
+      "active": false,
+      "focus": false,
+      "start": 347,
+      "drag_x": 1058.5615460005633,
+      "drag_y": 1198.436909469667,
+      "drag_w": 600,
+      "drag_h": 1200,
+      "output": "",
+      "focused": false,
+      "renderer": "function (state) {\n  // // ----------------------------------\n  // // Are.na channel saver\n  // // ----------------------------------\n    \n  // // this one will be to load are.na data into a folder in fs\n  // // /fs/arena-data/blog-feed.json\n  \n  // // TODO: Make a jsdoc are.na library\n  // // with utils like hack-refresh, get >100 per, \n\n  // const ARENA_HOST = \"http://localhost:3000/api/\"\n  // const SLUG = \"blog-feed\"\n  let render = sig(() => h(\"p\", \"...loading\"))\n  // let css = sig(\"\")\n  // const render_json = (json) => {\n  //   import(\"/js/snippet/JsonViewer.json\")\n  //     .then((j) => {\n        \n  //       let jj = new j.JsonViewer(json)\n  //       render.set(jj.render.bind(jj))\n  //       css.set(jj.css())\n  //     })\n\n  //   return render\n  // }\n  // const get_channel = (slug) => {\n  //   fetch(ARENA_HOST+\"channels/\"+slug)\n  //     .then((res) => res.json())\n  //     .then((res) => {\n  //       let b = {content: JSON.stringify(res)}\n        \n  //       fetch(\"/fs/arena-data/blog-feed.json\", {\n  //         headers: { \"Content-Type\": \"application/json\" },\n  //         method: \"PUT\",\n  //         body: JSON.stringify(b),\n          \n  //       });\n        \n  //       render_json(res)\n  //     })\n  // }\n\n  // get_channel(SLUG)\n  \n\n  let style = mem(() => `\n    background: white;\n  `)\n  \n  \n  return h(\"div\", {style: style},render)  \n}",
+      "cursor": 0
+    },
+    {
+      "type": "code",
+      "id": "40rkwn",
+      "start": 347,
+      "drag_x": 1416.0737505338664,
+      "drag_y": 312.2783851495045,
+      "focused": false,
+      "output": "let style = mem(() => `\n*::-webkit-scrollbar {\n  display: none;\n}\n\n*{\n  font-family: monospace;\n  padding: 0;\n  margin: 0;\n  -ms-overflow-style: none;  /* IE and Edge */\n  scrollbar-width: none;  /* Firefox */\n}\n\nbody {\n  background: var(--base07);\n  color: var(--base01);\n}\n\n.main {\n  display: grid;\n  grid-template-columns: 1fr 1fr;\n  padding: 1em;\n  grid-gap: 1em;\n}\n\n.main > div {\n  border: 1.5px dotted #ddd;\n  box-shadow: 0 0 30px 10px #0002;\n}\n\n.arena-container { \n  padding: 1em;;\n}\n\n.ProseMirror {\n  position: relative;\n  padding: 100px;\n}\n\n.ProseMirror {\n  word-wrap: break-word;\n  white-space: pre-wrap;\n  white-space: break-spaces;\n}\n\n.ProseMirror pre { white-space: pre-wrap; }\n\n.ProseMirror li { position: relative; }\n\n.ProseMirror-hideselection *::selection { background: transparent; }\n.ProseMirror-hideselection *::-moz-selection { background: transparent; }\n.ProseMirror-hideselection { caret-color: transparent; }\n\n/* See https://github.com/ProseMirror/prosemirror/issues/1421#issuecomment-1759320191 */\n.ProseMirror [draggable][contenteditable=false] { user-select: text }\n\n.ProseMirror-selectednode {\n  outline: .5px solid #666;\n}\n\n/* Make sure li selections wrap around markers */\n\nli.ProseMirror-selectednode {\n  outline: none;\n}\n\nli.ProseMirror-selectednode:after {\n  content: \"\";\n  position: absolute;\n  left: -32px;\n  right: -2px; top: -2px; bottom: -2px;\n  border: 2px solid #8cf;\n  pointer-events: none;\n}\n\n/* Protect against generic img rules */\n\nimg.ProseMirror-separator {\n  display: inline !important;\n  border: none !important;\n  margin: 0 !important;\n}\n .ProseMirror-textblock-dropdown {\n  min-width: 3em;\n}\n\n.ProseMirror-menu {\n  margin: 0 -4px;\n  line-height: 1;\n}\n\n.ProseMirror-tooltip .ProseMirror-menu {\n  width: -webkit-fit-content;\n  width: fit-content;\n  white-space: pre;\n}\n\n.ProseMirror-menuitem {\n  margin-right: 3px;\n  display: inline-block;\n}\n\n.ProseMirror-menuseparator {\n  border-right: 1px solid #ddd;\n  margin-right: 3px;\n}\n\n.ProseMirror-menu-dropdown, .ProseMirror-menu-dropdown-menu {\n  font-size: 90%;\n  white-space: nowrap;\n}\n\n.ProseMirror-menu-dropdown {\n  vertical-align: 1px;\n  cursor: pointer;\n  position: relative;\n  padding-right: 15px;\n}\n\n.ProseMirror-menu-dropdown-wrap {\n  padding: 1px 0 1px 4px;\n  display: inline-block;\n  position: relative;\n}\n\n.ProseMirror-menu-dropdown:after {\n  content: \"\";\n  border-left: 4px solid transparent;\n  border-right: 4px solid transparent;\n  border-top: 4px solid currentColor;\n  opacity: .6;\n  position: absolute;\n  right: 4px;\n  top: calc(50% - 2px);\n}\n\n.ProseMirror-menu-dropdown-menu, .ProseMirror-menu-submenu {\n  position: absolute;\n  background: white;\n  color: #666;\n  border: 1px solid #aaa;\n  padding: 2px;\n}\n\n.ProseMirror-menu-dropdown-menu {\n  z-index: 15;\n  min-width: 6em;\n}\n\n.ProseMirror-menu-dropdown-item {\n  cursor: pointer;\n  padding: 2px 8px 2px 4px;\n}\n\n.ProseMirror-menu-dropdown-item:hover {\n  background: #f2f2f2;\n}\n\n.ProseMirror-menu-submenu-wrap {\n  position: relative;\n  margin-right: -4px;\n}\n\n.ProseMirror-menu-submenu-label:after {\n  content: \"\";\n  border-top: 4px solid transparent;\n  border-bottom: 4px solid transparent;\n  border-left: 4px solid currentColor;\n  opacity: .6;\n  position: absolute;\n  right: 4px;\n  top: calc(50% - 4px);\n}\n\n.ProseMirror-menu-submenu {\n  display: none;\n  min-width: 4em;\n  left: 100%;\n  top: -3px;\n}\n\n.ProseMirror-menu-active {\n  background: #eee;\n  border-radius: 4px;\n}\n\n.ProseMirror-menu-disabled {\n  opacity: .3;\n}\n\n.ProseMirror-menu-submenu-wrap:hover .ProseMirror-menu-submenu, .ProseMirror-menu-submenu-wrap-active .ProseMirror-menu-submenu {\n  display: block;\n}\n\n.ProseMirror-menubar {\n  border-top-left-radius: inherit;\n  border-top-right-radius: inherit;\n  position: relative;\n  min-height: 1em;\n  color: #666;\n  padding: 1px 6px;\n  top: 0; left: 0; right: 0;\n  border-bottom: 1px solid silver;\n  background: white;\n  z-index: 10;\n  -moz-box-sizing: border-box;\n  box-sizing: border-box;\n  overflow: visible;\n}\n\n.ProseMirror-icon {\n  display: inline-block;\n  line-height: .8;\n  vertical-align: -2px; /* Compensate for padding */\n  padding: 2px 8px;\n  cursor: pointer;\n}\n\n.ProseMirror-menu-disabled.ProseMirror-icon {\n  cursor: default;\n}\n\n.ProseMirror-icon svg {\n  fill: currentColor;\n  height: 1em;\n}\n\n.ProseMirror-icon span {\n  vertical-align: text-top;\n}\n\n\n\n`)\n\n\n\n\n\n\n\n\n\n\n",
+      "cursor": 1147,
+      "active": true,
+      "focus": true,
+      "drag_w": 600,
+      "drag_h": 830
+    },
+    {
+      "type": "code",
+      "id": "1iocik",
+      "start": 4690,
+      "drag_x": 2618.537813647835,
+      "drag_y": 456.36554658804164,
+      "focused": false,
+      "output": "// ---------------\n// ARENA SIDE\n// ---------------\n\nfunction arena() {\n  return html`\n    h1 -- Arena\n  `\n}\n\n\n\n\n\n\n\n",
+      "cursor": 91,
+      "active": false,
+      "focus": false,
+      "drag_w": 600,
+      "drag_h": 740
+    },
+    {
+      "type": "code",
+      "id": "zq0k7",
+      "start": 4806,
+      "drag_x": 3709.8317011020686,
+      "drag_y": 477.8446976661296,
+      "focused": false,
+      "output": "const Root = () => {\n  \n  mounted(() => {\n    const v = new view.EditorView(document.querySelector(\"#editor\"), {\n      state: state.EditorState.create({\n        doc: model.DOMParser.fromSchema(mySchema).parse(document.querySelector(\"#editor\")),\n        plugins: exampleSetup.exampleSetup({schema: mySchema})\n      })\n    })\n  })\n  \n  return html`\n  style -- ${style}\n  .main\n    .editor-container\n      #editor\n    .arena-container -- ${arena}\n    \n  \n  `\n}\n\n\nrender(Root, document.body)\n\n\n",
+      "cursor": 442,
+      "active": false,
+      "focus": false,
+      "drag_w": 600,
+      "drag_h": 780
+    },
+    {
+      "type": "code",
+      "id": "d22ovl",
+      "start": 5296,
+      "drag_x": 4747.357775971194,
+      "drag_y": 1200.244157939201,
+      "focused": false,
+      "output": "\n\n\n\n\n\n\n\n\n\n\n",
+      "cursor": 0,
+      "active": false,
+      "focus": false,
+      "drag_w": 600,
+      "drag_h": 60
+    },
+    {
+      "type": "code",
+      "id": "bra7t",
+      "start": 5307,
+      "drag_x": 4756.580811147807,
+      "drag_y": 1318.565313470901,
+      "focused": false,
+      "output": "\n\n\n\n\n\n\n\n\n\n",
+      "cursor": 0,
+      "active": false,
+      "focus": false,
+      "drag_w": 600,
+      "drag_h": 1200
+    }
+  ],
+  "output": "",
+  "properties": {
+    "panzoom": {
+      "initialX": -781.3128403345087,
+      "initialY": -210.11742995387831,
+      "initialZoom": 0.9902912621359223
+    },
+    "buffer": [
+      1,
+      4,
+      3,
+      5,
+      -1
+    ]
+  }
+}
