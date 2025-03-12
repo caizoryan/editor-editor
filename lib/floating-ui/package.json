@@ -1,0 +1,15 @@
+{
+  "name": "floating-ui",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@floating-ui/dom": "^1.6.13",
+    "@rollup/plugin-node-resolve": "^16.0.1"
+  }
+}
