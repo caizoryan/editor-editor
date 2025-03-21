@@ -12,27 +12,38 @@ import ts from "typescript"
 let len = 0
 
 const read_file = async (file_path) => {
+	console.log("path", file_path)
 	let root = process.cwd()
 	let full_path = path.join(root, file_path)
 	console.log("path", full_path)
-	let read = fs.readFileSync(full_path, { encoding: "utf8" })
-	return read
+	const is_file = fs.lstatSync(full_path).isFile()
+	if (is_file) {
+		return fs.readFileSync(full_path, { encoding: "utf8" })
+	}
+	else {
+		return false
+	}
 }
 
 
 const addUserLibraries = async (map) => {
 	const getLib = async (name) => {
 		const lib = "/lib/"
+		console.log("trying", lib + name)
 		let r = await read_file(lib + name)
-		len += r.length
-		return r
+		if (r) {
+			return r
+		} else {
+			return false
+		}
 	}
 	//
 	const addLib = async (name, map) => {
 		console.log("adding library: ", name)
 		let val = await getLib(name)
-		console.log("map_set:", "/lib/" + name)
-		map.set("/lib/" + name, val)
+		console.log("map_setting:", "/lib/" + name)
+		if (val) map.set("/lib/" + name, val)
+		else console.log("Failed")
 	}
 
 	// read /lib/ dir
@@ -53,6 +64,7 @@ const addUserLibraries = async (map) => {
 		if (file.split(".").pop() == "js"
 			|| is_d_ts(file)
 		) {
+			console.log("going to file", file)
 			addLib(file, map)
 		}
 	})
@@ -135,7 +147,6 @@ export async function create_env(content) {
 	const system = createSystem(fsMap)
 	addUserLibraries(fsMap)
 	fsMap.set("index.js", content)
-
 
 	const compilerOpts = { target: ts.ScriptTarget.ES2017, esModuleInterop: true, allowJs: true, checkJs: true }
 	const env = createVirtualTypeScriptEnvironment(system, ["index.js"], ts, compilerOpts)
