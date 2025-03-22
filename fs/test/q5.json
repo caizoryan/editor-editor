@@ -1,0 +1,181 @@
+{
+  "blocks": [
+    {
+      "type": "group",
+      "id": "lck1sn",
+      "active": false,
+      "focus": false,
+      "start": 0,
+      "drag_x": 7641.599580414173,
+      "drag_y": 613.43188852291,
+      "drag_w": 600,
+      "drag_h": 400,
+      "output": "",
+      "blocks": []
+    },
+    {
+      "type": "load-component",
+      "id": "0otrjh",
+      "start": 0,
+      "path": "",
+      "output": "",
+      "active": false,
+      "focus": false,
+      "drag_x": 1289.0682106508261,
+      "drag_y": 1667.7271284340552,
+      "drag_w": 600,
+      "drag_h": 60
+    },
+    {
+      "type": "save-component",
+      "id": "d2db1m",
+      "start": 0,
+      "path": "test/q5.json",
+      "output": "",
+      "active": false,
+      "focus": false,
+      "drag_x": 652.867674233665,
+      "drag_y": 1663.8403610106884,
+      "drag_w": 600,
+      "drag_h": 70,
+      "autosave": true
+    },
+    {
+      "type": "editor_sizer",
+      "id": "q05bgb",
+      "start": 0,
+      "drag_x": 8.185538762772254,
+      "drag_y": 1657.9808778476524,
+      "size": "100",
+      "output": "",
+      "active": false,
+      "drag_w": 600,
+      "drag_h": 80
+    },
+    {
+      "type": "md",
+      "id": "nqch8",
+      "start": 0,
+      "drag_x": 3501.9802421141535,
+      "drag_y": 929.9721341145876,
+      "drag_w": 600,
+      "drag_h": 660,
+      "md": "# What do i need to make\n\n- Input color picker\n- into Set number of (swatches)\n\n## Swatch\n- ~~holds color~~\n- ~~renders a rect with color~~\n- ~~prints to a format of string: css var, hex, rgb, rgba etc~~\n\n## SwatchBox\n- ~~Array of swatches~~\n- ~~renders swatches to a container~~\n- ~~prints to json~~\n- savea to are.na (in-progress) \n- hold an are.na id and title or create new block \nin (default channel)",
+      "output": "",
+      "active": false,
+      "focus": false
+    },
+    {
+      "type": "code",
+      "id": "1xu0na",
+      "start": 0,
+      "drag_x": 1981.3384589263121,
+      "drag_y": 15.102516321889029,
+      "drag_w": 600,
+      "drag_h": 550,
+      "focused": false,
+      "output": "import {sig, mem, render, HTML as html,eff_on} from \"/lib/solid/monke.js\" \nimport {Q5 as p5} from \"/lib/q5/q5.js\" \n\nconst GlobalStyle = `\n.container{\n  width: 100vw;\n  height: 100vh;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  background: #ddd;\n}\n\n.q5{\n  width: min-content;\n}\n`\n\n\n\n\n\n\n",
+      "cursor": 0,
+      "active": false,
+      "focus": false
+    },
+    {
+      "type": "code",
+      "id": "etck6",
+      "start": 310,
+      "drag_x": 74.29826033719641,
+      "drag_y": 214.085119693853,
+      "drag_w": 600,
+      "drag_h": 800,
+      "focused": false,
+      "output": "/**\n@param {string} text\n@param {number} length\n@param {number} x\n@param {number} y\n@param {p5} p\n\n@description takes text and length, and returns overflowed text.\n*/\nlet draw_line = (p,text,x, y, length) => {\n  let words = text.split(\" \")\n  let space_size = p.textWidth(\" \")\n  let len = 0\n  let skip = false\n  let count = 0\n\n  words.forEach(word => {\n    if (skip) return\n    let word_len = p.textWidth(word)\n    \n    if (len + word_len > length) {\n      skip = true\n      return\n    }\n\n    p.text(word, x+len, y)\n    \n    len += word_len\n    len += space_size\n    count++\n  })\n\n  return words.slice(count).join(\" \")\n}\n\n/**\n@typedef {object} Paragraph\n@property {string} text\n@property {number} length\n@property {number} height\n@property {number} x\n@property {number} y\n@property {boolean} rect \n\n@param {Paragraph} paragraph\n@param {p5} p\n\n@description takes text and length, and returns overflowed text.\n*/\nlet draw_paragraph = (p, paragraph) => {\n  // TODO: \n  // 1. Add hyphenation\n  // 2. return overflow\n  let {\n  text, length,\n  height, x, y, rect\n  } = paragraph\n  \n  let LINE_HEIGHT = 28 \n  let cur_y = y\n  \n  while (text.length > 0 && cur_y < y+height) {\n    text = draw_line(p,text, 10, cur_y, length)\n    cur_y+=LINE_HEIGHT\n  }\n\n  if (rect){\n    p.noFill()\n    p.stroke(\"white\")\n    p.rect(x, y, length, height)\n  }\n}\n\nlet t = `Also have to add support for and stuff and all the cool nuggets and everything, just seeing how I can make this typesetting thing work, hopefyulll this could be a coll fun thing wehhoooo`\nlet x = 1\nlet add = (x, y) => x+y\nlet sub = (x, y) => x-y\n\nlet op = add\n\nsetTimeout(() => {\n  let p = new p5('instance', document.querySelector(\".q5\"));\n  \n  p.setup = () => {\n    p.createCanvas(400, 400);\n    //p.textFont(\"monospace\")\n  };\n  \n  p.draw = () => {\n    if (x > 3.8){\n      op = sub\n    }\n    else if (x < 1) {\n      op = add\n      \n    }\n    x = op(x, .05)\n    p.background(\"black\");\n    p.fill(\"white\")\n    p.textSize(18)\n\n    draw_paragraph(p,  {\n      text : t,\n      x: 20, y: 20, length: 100*x, height: 180,\n      rect: true\n    })\n\n    if (x > 3.7) {p.noLoop()}\n\n  };\n  \n}, 200)\n\n\n\n",
+      "cursor": 2093,
+      "active": true,
+      "focus": true
+    },
+    {
+      "type": "code",
+      "id": "ab6ag7",
+      "active": false,
+      "start": 2441,
+      "drag_x": 1999.4142899916937,
+      "drag_y": 641.7017396628041,
+      "drag_w": 600,
+      "drag_h": 940,
+      "focused": false,
+      "output": "\n\n\n\n",
+      "cursor": 0,
+      "focus": false
+    },
+    {
+      "type": "code",
+      "id": "l5qljd",
+      "start": 2445,
+      "drag_x": 2665.1160296544967,
+      "drag_y": 204.99189200043466,
+      "drag_w": 600,
+      "drag_h": 360,
+      "focused": false,
+      "output": "\nconst Test = (props) => html`<button>${props.children.map((e, i) => i+e)}</button`\n\nlet container = () => html`\n<style>\n  ${GlobalStyle}\n</style>\n\n<div class=\"container\">\n  <div class=\"q5\"></div>\n</div>\n`\nrender(container, document.body)\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+      "cursor": 0,
+      "active": false,
+      "focus": false
+    },
+    {
+      "type": "code",
+      "id": "tma0w",
+      "start": 2697,
+      "focused": false,
+      "output": "\n\n\n\n\n\n\n\n\n\n\n",
+      "cursor": 0,
+      "active": false,
+      "focus": false,
+      "drag_x": 2670.641783187837,
+      "drag_y": 31.26498911874063,
+      "drag_w": 600,
+      "drag_h": 120
+    },
+    {
+      "type": "code",
+      "id": "qzadb",
+      "start": 2708,
+      "drag_x": 3450.3156569652347,
+      "drag_y": 21.205032643778072,
+      "focused": false,
+      "output": "\n\n\n\n\n\n\n\n\n\n\n",
+      "cursor": 0,
+      "active": false,
+      "focus": false,
+      "drag_w": 800,
+      "drag_h": 160
+    },
+    {
+      "type": "load-component",
+      "id": "6nfuj",
+      "start": 2719,
+      "drag_x": 65.32826980296615,
+      "drag_y": 23.42805601006979,
+      "drag_w": 600,
+      "drag_h": 10,
+      "path": "",
+      "output": "",
+      "active": false,
+      "focus": false
+    }
+  ],
+  "output": "",
+  "properties": {
+    "panzoom": {
+      "initialX": 30.137560731145232,
+      "initialY": -101.30361355098874,
+      "initialZoom": 0.9402970829493328
+    },
+    "buffer": [
+      0,
+      -1,
+      -1,
+      -1,
+      0
+    ]
+  }
+}
