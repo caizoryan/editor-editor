@@ -56,11 +56,11 @@
       "type": "md",
       "id": "nqch8",
       "start": 0,
-      "drag_x": 3501.9802421141535,
-      "drag_y": 929.9721341145876,
+      "drag_x": 3960.843632930361,
+      "drag_y": 522.3013580013667,
       "drag_w": 600,
       "drag_h": 660,
-      "md": "# What do i need to make\n\n- Input color picker\n- into Set number of (swatches)\n\n## Swatch\n- ~~holds color~~\n- ~~renders a rect with color~~\n- ~~prints to a format of string: css var, hex, rgb, rgba etc~~\n\n## SwatchBox\n- ~~Array of swatches~~\n- ~~renders swatches to a container~~\n- ~~prints to json~~\n- savea to are.na (in-progress) \n- hold an are.na id and title or create new block \nin (default channel)",
+      "md": "# What do i need to make\n\n### Typesetter (basic)\n- Leading\n- Typeface\n- font-size\n- tracking (line -> add mode for setting lines(not nodes))\n- kerning\n\n### Typesetter (macro)\n- rect (w, h, x, y)\n- overflow\n- paragraph styles!\n\n### Typesetter (Export!)\n- pdf export (first can just be images in pdf)\n- image export \n- PDF Text export (use one of the pdf libraries)\n- booklet binding and stuff\n\n\n",
       "output": "",
       "active": false,
       "focus": false
@@ -69,15 +69,15 @@
       "type": "code",
       "id": "1xu0na",
       "start": 0,
-      "drag_x": 2874.6768153158073,
-      "drag_y": 852.8992461888511,
+      "drag_x": 3297.3114965505556,
+      "drag_y": 522.7494871265551,
       "drag_w": 600,
       "drag_h": 550,
       "focused": false,
       "output": "import {sig, mem, render, HTML as html,eff_on} from \"/lib/solid/monke.js\" \nimport {Q5 as p5} from \"/lib/q5/q5.js\" \n\nconst GlobalStyle = `\n.container{\n  width: 100vw;\n  height: 100vh;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  background: #ddd;\n}\n\n.q5{\n  width: min-content;\n}\n`\n\n\n\n\n\n\n\n\n\n\n\n",
-      "cursor": 0,
-      "active": false,
-      "focus": false
+      "cursor": 272,
+      "active": true,
+      "focus": true
     },
     {
       "type": "code",
@@ -89,7 +89,7 @@
       "drag_h": 800,
       "focused": false,
       "output": "\n/**\n@param {string} text\n@param {number} length\n@param {number} x\n@param {number} y\n@param {p5} p\n\n@description takes text and length, and returns overflowed text.\n*/\nlet draw_line = (p,text,x, y, length) => {\n  let words = text.split(\" \")\n  let space_size = p.textWidth(\" \")\n  let len = 0\n  let skip = false\n  let count = 0\n\n  words.forEach(word => {\n    if (skip) return\n    let word_len = p.textWidth(word)\n    \n    if (len + word_len > length) {\n      skip = true\n      return\n    }\n\n    p.text(word, x+len, y)\n    \n    len += word_len\n    len += space_size\n    count++\n  })\n\n  return words.slice(count).join(\" \")\n}\n\n\n\n\n",
-      "cursor": 1,
+      "cursor": 410,
       "active": false,
       "focus": false
     },
@@ -124,7 +124,7 @@
     {
       "type": "code",
       "id": "ab6ag7",
-      "active": true,
+      "active": false,
       "start": 1991,
       "drag_x": 1911.5020403713208,
       "drag_y": 606.401065603169,
@@ -132,8 +132,8 @@
       "drag_h": 940,
       "focused": false,
       "output": "setTimeout(() => {\n  let p = new p5('instance', document.querySelector(\".q5\"));\n  \n  p.setup = () => {\n    p.createCanvas(400, 400);\n    //p.textFont(\"monospace\")\n  };\n  \n  p.draw = () => {\n    if (animating){\n      if (x > 3.8){ op = sub }\n      else if (x < 1) { op = add }\n      x = op(x, .05)\n    }\n    \n    p.background(\"black\");\n    p.fill(\"white\")\n    p.textSize(18)\n    p.rect(p.mouseX, p.mouseY, 10,10)\n\n\n    draw_paragraph(p,  {\n      text : t,\n      x: 20, y: 20, length: 100*x, height: 180,\n      rect: false\n    })\n    \n    p.noLoop()\n\n    if (x > 4) {p.noLoop()}\n\n  };\n  \n}, 200)\n\n\n\n\n\n\n\n\n",
-      "cursor": 519,
-      "focus": true
+      "cursor": 395,
+      "focus": false
     },
     {
       "type": "code",
@@ -166,9 +166,9 @@
   "output": "",
   "properties": {
     "panzoom": {
-      "initialX": -1456.073965032465,
-      "initialY": -393.47320461938295,
-      "initialZoom": 0.814208984375
+      "initialX": -3502.3694764269767,
+      "initialY": -471.44215554625345,
+      "initialZoom": 1.0925539446758483
     },
     "buffer": [
       0,
