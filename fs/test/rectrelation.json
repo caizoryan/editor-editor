@@ -1,0 +1,170 @@
+{
+  "blocks": [
+    {
+      "type": "load-component",
+      "id": "0otrjh",
+      "start": 0,
+      "path": "",
+      "output": "",
+      "active": false,
+      "focus": false,
+      "drag_x": 1289.0682106508261,
+      "drag_y": 2017.7271284340552,
+      "drag_w": 600,
+      "drag_h": 60
+    },
+    {
+      "type": "editor_sizer",
+      "id": "q05bgb",
+      "start": 0,
+      "drag_x": 8.185538762772254,
+      "drag_y": 2037.9808778476524,
+      "size": "100",
+      "output": "",
+      "active": false,
+      "drag_w": 600,
+      "drag_h": 80,
+      "focus": false
+    },
+    {
+      "type": "code",
+      "id": "1xu0na",
+      "start": 0,
+      "drag_x": 3297.3114965505556,
+      "drag_y": 522.7494871265551,
+      "drag_w": 600,
+      "drag_h": 550,
+      "focused": false,
+      "output": "import {sig, mem, render, HTML as html,eff_on} from \"/lib/solid/monke.js\" \nimport {hyphenateSync} from \"/lib/hyphenator/hyphenate.js\"\nimport {Q5 as p5} from \"/lib/q5/q5.js\" \n\nconst GlobalStyle = `\n.container{\n  width: 100vw;\n  height: 100vh;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  background: #ddd;\n}\n\n.q5{\n  width: min-content;\n}\n`\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+      "cursor": 0,
+      "active": false,
+      "focus": false
+    },
+    {
+      "type": "code",
+      "id": "etck6",
+      "start": 386,
+      "drag_x": 3622.236912809938,
+      "drag_y": 1647.5006271952798,
+      "drag_w": 600,
+      "drag_h": 800,
+      "focused": false,
+      "output": "\n\n\n",
+      "cursor": 0,
+      "active": true,
+      "focus": false
+    },
+    {
+      "type": "save-component",
+      "id": "d2db1m",
+      "start": 389,
+      "path": "test/rectrelation.json",
+      "output": "",
+      "active": false,
+      "focus": false,
+      "drag_x": 652.867674233665,
+      "drag_y": 2023.8403610106884,
+      "drag_w": 600,
+      "drag_h": 70,
+      "autosave": true
+    },
+    {
+      "type": "code",
+      "id": "ab6ag7",
+      "active": false,
+      "start": 389,
+      "drag_x": 2917.177037706333,
+      "drag_y": 2152.9238246023865,
+      "drag_w": 600,
+      "drag_h": 940,
+      "focused": false,
+      "output": "let rect = (p, x, y, w, h) => {\n  let relation = (rx, ry, rw, rh) => {\n    let vertical = {\n      direction: \"\",\n      value: 0\n    }\n    \n    let horizontal = {\n      direction: \"\",\n      value: 0\n    }\n    \n    if (ry > y) {\n      vertical.direction = \"bottom\"\n      vertical.value =  ry - y\n    }else {\n      vertical.direction = \"top\"\n      vertical.value =  y - ry\n    }\n    if (rx > x) {\n      horizontal.direction = \"right\"\n      horizontal.value  = rx - x\n    } else {\n      horizontal.direction = \"left\"\n      horizontal.value  = x - rx\n    }\n\n\n    return {vertical, horizontal, stress: vertical.value > horizontal.value ? \"vertical\" : \"horizontal\" }\n    // returns either top, right, bottom or left\n  }\n\n  let relation_midpoint = (x, y, w, h) => {\n    let relational = relation(x, y, w, h)\n    let point = midpoint(relational[relational.stress].direction)\n    return point\n  }\n  \n  let midpoint = (side = \"right\") => {\n    if (side == \"top\"){\n      return { x: x + (w/2), y }\n    }\n    \n    if (side == \"right\"){\n      return { x: x+w, y: y + (h/2) }\n    }\n    \n    if (side == \"left\"){\n      return { x, y: y + (h/2) }\n    }\n    \n    if (side == \"bottom\"){\n      return { x: x + (w/2), y: y+h }\n    }\n  }\n  \n  let transform = () => [x, y, w, h]\n  let draw = () => { p.rect(x, y, w, h) }\n\n  return { relation, draw, transform, midpoint, relation_midpoint }\n}\n\n\nsetTimeout(() => {\n  let p = new p5('instance', document.querySelector(\".q5\"));\n  let ww = 100\n  let hh = 100\n  let center \n  \n  function strokeDashed(list) {\n    p.ctx.setLineDash(list);\n  }\n  \n  p.setup = () => {\n    p.createCanvas(1200, 800);\n    center = rect(p, p.width / 2 - (ww/2), p.height / 2 - (hh/2), ww, hh)\n  };\n  \n  p.draw = () => {\n    p.background(\"white\");\n    p.textFont(\"monospace\")\n    p.textSize(12)\n\n    let mouse = rect(p, p.mouseX, p.mouseY, 10,10)\n    \n    center.draw()\n    mouse.draw()\n    \n    let p1 = center.relation_midpoint(...mouse.transform())\n    let p2 = mouse.relation_midpoint(...center.transform())\n    \n    let a = p1.x - p2.x;\n    let b = p1.y - p2.y;\n    let dist = Math.sqrt( a*a + b*b );\n\n    if (dist > 300) strokeDashed([8,8])\n    p.line(p1.x, p1.y, p2.x, p2.y)\n    \n    strokeDashed([])\n    p.circle(p1.x, p1.y, 10)\n    p.circle(p2.x, p2.y, 10)\n\n  };\n  \n}, 100)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+      "cursor": 0,
+      "focus": false
+    },
+    {
+      "type": "code",
+      "id": "l5qljd",
+      "start": 2689,
+      "drag_x": 2897.459561166803,
+      "drag_y": 1602.9859720170193,
+      "drag_w": 600,
+      "drag_h": 360,
+      "focused": false,
+      "output": "\nconst Test = (props) => html`<button>${props.children.map((e, i) => i+e)}</button`\n\nlet container = () => html`\n<style>\n  ${GlobalStyle}\n</style>\n\n<div class=\"container\">\n  <div class=\"q5\"></div>\n</div>\n`\nrender(container, document.body)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+      "cursor": 0,
+      "active": false,
+      "focus": false
+    },
+    {
+      "type": "md",
+      "id": "nqch8",
+      "start": 2958,
+      "drag_x": 2010.9225702118256,
+      "drag_y": 1400.1805644079188,
+      "drag_w": 600,
+      "drag_h": 660,
+      "md": "# What do i need to make\n\n### Typesetter (basic)\n- Leading\n- Typeface\n- font-size\n- tracking (line -> add mode for setting lines(not nodes))\n- kerning\n\n\n### Typesetter (macro)\n- rect (w, h, x, y)\n- overflow\n- paragraph styles!\n\n\n### Typesetter (Export!)\n- pdf export (first can just be images in pdf)\n- image export \n- PDF Text export (use one of the pdf libraries)\n- booklet binding and stuff\n\n\n\n",
+      "output": "",
+      "active": false,
+      "focus": false
+    },
+    {
+      "type": "code",
+      "id": "tma0w",
+      "start": 2958,
+      "focused": false,
+      "output": "\n\n\n",
+      "cursor": 0,
+      "active": false,
+      "focus": false,
+      "drag_x": 2015.8183388482496,
+      "drag_y": 821.5111284766746,
+      "drag_w": 960,
+      "drag_h": 630
+    },
+    {
+      "type": "code",
+      "id": "qzadb",
+      "start": 2961,
+      "drag_x": 2014.8264889952538,
+      "drag_y": 536.7127742707485,
+      "focused": false,
+      "output": "\n\n\n",
+      "cursor": 0,
+      "active": false,
+      "focus": false,
+      "drag_w": 800,
+      "drag_h": 210
+    },
+    {
+      "type": "code",
+      "id": "hwvr23",
+      "active": false,
+      "focus": false,
+      "start": 2964,
+      "drag_x": 1996.7479624632485,
+      "drag_y": 315.68699061581225,
+      "drag_w": 880,
+      "drag_h": 60,
+      "focused": false,
+      "output": "\n\n\n\n\n\n\n\n\n",
+      "cursor": 0
+    }
+  ],
+  "output": "",
+  "properties": {
+    "panzoom": {
+      "initialX": 73.67801713818233,
+      "initialY": 4.943385145699608,
+      "initialZoom": 0.3097316234591286
+    },
+    "buffer": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+    ]
+  }
+}
